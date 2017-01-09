@@ -1,0 +1,36 @@
+.c-table-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.c-table-grid__item-content {
+    display: flex;
+    flex-direction: row;
+
+    border-bottom: solid 1px;
+}
+
+.c-table-grid__item-spacer {
+    display: none;
+}
+
+@media (min-width : 768px) {
+    .c-table-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .c-table-grid__item {
+        width: 33vw;
+    }
+
+    .c-table-grid__item-content {
+        display: flex;
+        flex-direction: column;
+        border: none;
+    }
+
+    .c-table-grid__item-spacer {
+        flex-grow: 1;
+    }
+}

@@ -1,0 +1,27 @@
+$nav-bar-height: 64px;
+$base-px-unit: 4px;
+$border-radius: 6px;
+
+// Colours
+// ---
+$primary-color: rgb(163, 112, 208);
+$primary-color-accent-light: rgb(231, 219, 242);
+$primary-color-accent: rgb(221, 204, 237);
+
+
+$grey-97: hsl(0, 0%, 97%);
+$grey-70: hsl(0, 0%, 70%);
+$grey-50: hsl(0, 0%, 50%);
+$grey-30: hsl(0, 0%, 30%);
+
+// Margins & Padding
+// ---
+$spacing__map: (
+    small: $base-px-unit,
+    medium: $base-px-unit * 2,
+    large: $base-px-unit * 3,
+);
+
+// Layers
+// ---
+$sky-layer: 9999;

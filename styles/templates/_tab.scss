@@ -1,0 +1,5 @@
+.t-tab {
+    width: 100%;
+    padding: map-get($spacing__map, large) 0;
+    overflow: auto;
+}
