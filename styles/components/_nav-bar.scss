@@ -20,6 +20,8 @@
     margin: 0 8px;
 
     text-align: center;
+    text-decoration: none;
+
     font-size: 11px;
     font-weight: 300;
     color: $grey-70;
@@ -39,6 +41,6 @@
 }
 
 .c-nav-bar__tab:hover {
-    color: $grey-70;
+    color: $primary-color;
     text-decoration: none;
 }
