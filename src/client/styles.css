@@ -55,14 +55,18 @@ body {
   background-color: #f7f7f7;
   opacity: .95; }
 
+a.c-nav-bar__tab {
+  text-decoration: none; }
+
 .c-nav-bar__tab {
   flex-grow: 1;
   margin: 0 8px;
   text-align: center;
-  text-decoration: none;
   font-size: 11px;
   font-weight: 300;
   color: #b3b3b3; }
+  .c-nav-bar__tab div {
+    text-decoration: none; }
 
 .c-nav-bar__tab-icon {
   font-size: 24px;
@@ -74,8 +78,7 @@ body {
     color: #a370d0; }
 
 .c-nav-bar__tab:hover {
-  color: #a370d0;
-  text-decoration: none; }
+  color: #a370d0; }
 
 .c-table-grid {
   display: flex;
@@ -127,7 +130,8 @@ body {
   padding: 12px; }
   .c-playlist__item-text h4 {
     color: #a370d0;
-    font-weight: 300; }
+    font-weight: 300;
+    text-overflow: ellipsis; }
 
 .c-playlist__item-disclosure {
   display: flex;
@@ -155,8 +159,12 @@ body {
   .c-playlist__item-disclosure {
     display: none; } }
 .t-tab {
+  display: none;
   width: 100%;
   padding: 12px 0;
   overflow: auto; }
+
+.t-playlist.c--active {
+  display: block; }
 
 /*# sourceMappingURL=styles.css.map */

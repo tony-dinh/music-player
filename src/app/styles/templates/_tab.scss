@@ -1,5 +1,10 @@
 .t-tab {
+    display: none;
     width: 100%;
     padding: map-get($spacing__map, large) 0;
     overflow: auto;
+}
+
+.t-playlist.c--active {
+    display: block;
 }
