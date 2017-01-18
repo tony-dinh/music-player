@@ -1,10 +1,11 @@
 var TITLE_SORT_KEY = 'title';
 var ARTIST_SORT_KEY = 'artist';
 
-var PLAYLISTS = window.MUSIC_DATA ? window.MUSIC_DATA.playlists : undefined;
-var SONGS = window.MUSIC_DATA ? window.MUSIC_DATA.songs : undefined;
-var ARTIST_SORTED_SONGS = undefined;
 var TITLE_SORTED_SONGS = undefined;
+var ARTIST_SORTED_SONGS = undefined;
+
+var SONGS = window.MUSIC_DATA ? window.MUSIC_DATA.songs : undefined;
+var PLAYLISTS = window.MUSIC_DATA ? window.MUSIC_DATA.playlists : undefined;
 
 
 // Spacer used for alignment on desktop grid layout
@@ -48,17 +49,19 @@ var _loadSongsSortedBy = function(sortKey) {
     var addSong = function(songObj) {
         var songEl = document.createElement('div');
 
-        songEl.className = 'c-table-grid__item c-library__item'
-        songEl.innerHTML = '<div class="c-library__item-content c-table-grid__item-content"><img class="c-library__item-art" src="../app/styles/assets/150.png" alt="Album Art"><div class="c-library__item-text u-flex-col u--center"><h4>' + songObj.title + '</h4><h5>' + songObj.artist + '</h5></div><div class="c-library__item-disclosure"><button type="button" name="Play" class="c-button c--disclosure glyphicon glyphicon-play"></button><button type="button" name="Add To Playlist" class="c-button c--disclosure glyphicon glyphicon-plus-sign"></button></div></div>'
+        songEl.className = 'c-table-grid__item c-library__item';
+        songEl.dataset.id = songObj.id;
+        songEl.innerHTML = '<div class="c-library__item-content c-table-grid__item-content"><img class="c-library__item-art" src="../app/styles/assets/150.png" alt="Album Art"><div class="c-library__item-text u-flex-col u--center"><h4>' + songObj.title + '</h4><h5>' + songObj.artist + '</h5></div><div class="c-library__item-disclosure"><button type="button" name="Play" class="js-play c-button c--disclosure glyphicon glyphicon-play"></button><button type="button" name="Add To Playlist" class="js-add-to-playlist c-button c--disclosure glyphicon glyphicon-plus-sign"></button></div></div>';
         library.append(songEl);
     }
 
     // Clear all existing songs
     library.innerHTML = '';
-    sortedSongs.forEach(function(song) {
-        addSong(song);
-    });
+    sortedSongs.forEach(addSong);
     _addSpacerTo('library');
+
+    // TODO: remove when jQuery is allowed
+    _registerAddToPlaylistEvents();
 };
 
 var _registerSortEvents = function() {
@@ -83,8 +86,48 @@ var _registerSortEvents = function() {
     }
 };
 
+var _registerAddToPlaylistEvents = function() {
+    var buttons = document.getElementsByClassName('js-add-to-playlist');
+
+    var showPlaylistSelectionFor = function(songId) {
+        var overlay = document.getElementsByClassName('c-overlay')[0];
+        overlay.className = overlay.className + ' c--visible';
+
+        // TODO: use jQuery to make this more robust
+        document.getElementsByTagName('body')[0].className = 'u-no-scroll';
+    };
+
+    var addToPlaylistHandler = function(e) {
+        e.stopPropagation();
+        var songEl = this.closest('.c-library__item');
+        showPlaylistSelectionFor(songEl.dataset.id);
+    };
+
+    for (var i = 0; i < buttons.length ; i++) {
+        var button = buttons[i];
+        button.addEventListener('click', addToPlaylistHandler, false);
+    }
+};
+
+var _hideOverlay = function() {
+    var overlay = document.getElementsByClassName('c-overlay')[0];
+    overlay.className = overlay.className.replace('c--visible', '');
+
+    // TODO: use jQuery to make this more robust
+    document.getElementsByTagName('body')[0].className = '';
+};
+
+var _registerPlaylistSelectorEvents = function() {
+    var overlay = document.getElementsByClassName('c-overlay')[0];
+    overlay.addEventListener('click', function(e) {
+        e.stopPropagation();
+        _hideOverlay();
+    });
+};
+
 var _registerLibraryEvents = function() {
     _registerSortEvents();
+    _registerPlaylistSelectorEvents();
 };
 
 var _libraryUI = function() {
@@ -99,23 +142,22 @@ var _loadPlaylists = function() {
         return;
     }
 
-    var addPlaylist = function(playListName) {
+    var addPlaylist = function(playlistObj) {
         var playlists = document.getElementById('playlists');
         var playlistEl = document.createElement('div');
 
         playlistEl.className = 'c-table-grid__item c-playlist__item';
-        playlistEl.innerHTML = '<div class="c-playlist__item-content c-table-grid__item-content"><img class="c-playlist__item-art" src="../app/styles/assets/150.png" alt="Playlist Art"><div class="c-playlist__item-text u-flex-col u--center"><h4>' + playListName + '</h4></div><div class="c-playlist__item-disclosure"><span class="glyphicon glyphicon-chevron-right"></span></div></div>';
+        playlistEl.dataset.id = playlistObj.id;
+        playlistEl.innerHTML = '<div class="c-playlist__item-content c-table-grid__item-content"><img class="c-playlist__item-art" src="../app/styles/assets/150.png" alt="Playlist Art"><div class="c-playlist__item-text u-flex-col u--center"><h4>' + playlistObj.name + '</h4></div><div class="c-playlist__item-disclosure"><span class="glyphicon glyphicon-chevron-right"></span></div></div>';
         playlists.append(playlistEl);
     };
 
-    PLAYLISTS.forEach(function(playlist) {
-        addPlaylist(playlist.name);
-    });
+    PLAYLISTS.forEach(addPlaylist);
+    _addSpacerTo('playlists');
 };
 
 var _playlistUI = function() {
     _loadPlaylists();
-    _addSpacerTo('playlists');
 };
 
 // Search UI

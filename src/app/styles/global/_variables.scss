@@ -9,6 +9,8 @@ $border-radius: 6px;
 $primary-color: rgb(163, 112, 208);
 $primary-color-accent-light: rgb(231, 219, 242);
 $primary-color-accent: rgb(221, 204, 237);
+$alpha-shadow: hsla(0, 0%, 30%, 0.7);
+$overlay-black: rgba(0, 0, 0, 0.4);
 
 // Neutral
 // ---
@@ -16,7 +18,6 @@ $grey-97: hsl(0, 0%, 97%);
 $grey-70: hsl(0, 0%, 70%);
 $grey-50: hsl(0, 0%, 50%);
 $grey-30: hsl(0, 0%, 30%);
-$grey-30-a: hsla(0, 0%, 30%, 0.7);
 
 // Margins & Padding
 // ---
@@ -28,4 +29,5 @@ $spacing__map: (
 
 // Layers
 // ---
+$top-layer: 99;
 $sky-layer: 9999;

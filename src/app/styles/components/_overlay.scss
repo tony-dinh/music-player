@@ -1,0 +1,17 @@
+.c-overlay {
+    position: fixed;
+    top: $nav-bar-height;
+    left: 0;
+    width: 100vw;
+    height: 0;
+    background-color: $overlay-black;
+    z-index: $top-layer;
+
+    opacity: 0;
+    transition: opacity 250ms;
+}
+
+.c-overlay.c--visible {
+    height: 100vh;
+    opacity: 1;
+}
