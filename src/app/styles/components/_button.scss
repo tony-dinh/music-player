@@ -1,5 +1,42 @@
 .c-button {
     display: block;
+    padding: map-get($spacing__map, medium) map-get($spacing__map, large)*2;
+
+    border: none;
+    border-radius: $border-radius;
+
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.c-button:focus {
+    outline-style: none;
+}
+
+.c-button.c--full-width {
+    width: 100%;
+}
+
+.c-button.c--half-width {
+    width: 40%;
+}
+
+.c-button.c--primary {
+    color: white;
+    background-color: $primary-color;
+}
+
+.c-button__container {
+    padding: 0 map-get($spacing__map, large);
+}
+
+.c-button.c--active {
+    box-shadow: inset 0px 2px 8px 0px $grey-30-a;
+}
+
+.c-button.c--disclosure {
+    background-color: inherit;
+    display: block;
     padding: map-get($spacing__map, medium);
 
     border: none;
@@ -9,27 +46,12 @@
     letter-spacing: 1px;
 }
 
-.c-button.c--full-width {
-    width: 100%;
-}
-
-.c-button__container {
-    padding: 0 map-get($spacing__map, large);
-}
-
-#playlist-button {
-    margin: auto;
-    color: white;
-    background-color: $primary-color;
-}
-
 @media (min-width : 768px) {
     .c-button.c--full-width {
         max-width: 60vw;
     }
 
-    #playlist-button {
-        margin: auto;
+    .c-button.c--primary {
         margin-bottom: map-get($spacing__map, large) * 2;
         color: white;
         background-color: $primary-color;

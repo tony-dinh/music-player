@@ -3,10 +3,13 @@
     flex-direction: column;
 }
 
+.c-table-grid__item {
+    width: 100%;
+}
+
 .c-table-grid__item-content {
     display: flex;
     flex-direction: row;
-
     border-bottom: solid 1px;
 }
 

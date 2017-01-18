@@ -1,0 +1,25 @@
+$margin-prefix: u-margin;
+$spacing-directions: (top, right, bottom, left);
+$spacing-sizes: (small, medium, large);
+
+@each $size in $spacing-sizes {
+    @each $direction in $spacing-directions {
+        .#{$margin-prefix}-#{$direction}-#{$size} {
+            margin-#{$direction}: map-get($spacing__map, $size);
+        }
+    }
+
+    .#{$margin-prefix}-#{$size} {
+        margin: map-get($spacing__map, $size);
+    }
+
+    .#{$margin-prefix}-h-#{$size} {
+        margin-left: map-get($spacing__map, $size);
+        margin-right: map-get($spacing__map, $size);
+    }
+
+    .#{$margin-prefix}-v-#{$size} {
+        margin-top: map-get($spacing__map, $size);
+        margin-bottom: map-get($spacing__map, $size);
+    }
+}

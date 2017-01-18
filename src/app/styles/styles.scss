@@ -3,13 +3,21 @@
 @import 'global/variables';
 @import 'global/base';
 
+// Utils
+// ---
+@import 'global/utils/flex';
+@import 'global/utils/spacing';
+
 // Components
 // ---
 @import 'components/button';
 @import 'components/nav-bar';
+@import 'components/search-bar';
 @import 'components/table-grid';
 
 // Templates
 // ---
+@import 'templates/library';
 @import 'templates/playlist';
+@import 'templates/search';
 @import 'templates/tab';

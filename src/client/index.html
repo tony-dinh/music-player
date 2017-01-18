@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Exercise 1</title>
+        <title>Exercise 2</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap core CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -11,15 +11,15 @@
     <body>
         <header>
             <nav class="c-nav-bar">
-                <a href="#library" data-tab="library" class="c-nav-bar__tab">
+                <a href="#" data-tab="library" class="c-nav-bar__tab">
                     <div class="c-nav-bar__tab-icon glyphicon glyphicon-music"></div>
                     <div>Library</div>
                 </a>
-                <a href="#playlists" data-tab="playlists" class="c-nav-bar__tab c--active">
+                <a href="#" data-tab="playlists" class="c-nav-bar__tab c--active">
                     <div class="c-nav-bar__tab-icon glyphicon glyphicon-list"></div>
                     <div>Playlists</div>
                 </a>
-                <a href="#search" data-tab="search" class="c-nav-bar__tab">
+                <a href="#" data-tab="search" class="c-nav-bar__tab">
                     <div class="c-nav-bar__tab-icon glyphicon glyphicon-search"></div>
                     <div>Search</div>
                 </a>
@@ -27,20 +27,30 @@
         </header>
         <!-- Library Tab -->
         <section id="library-tab-content" class="t-tab t-library">
+            <div class="c-button__container u-flex-row u--center">
+                <button class="c-button c--primary c--half-width u-margin-h-large c--active" type="button" name="Sort by Artist">Sort by Artist</button>
+                <button class="c-button c--primary c--half-width u-margin-h-large" type="button" name="Sort by Artist">Sort by Title</button>
+            </div>
+            <div id="library" class="c-table-grid"></div>
         </section>
 
         <!-- Playlist Tab -->
         <section id="playlists-tab-content" class="t-tab t-playlist c--active">
             <!-- Add to Playlist Button -->
-            <div class="c-button__container">
-                <button id="playlist-button" class="c-button c--full-width" type="button" name="Add Playlist"><span class="glyphicon glyphicon-plus"></span> Playlist</button>
+            <div class="c-button__container u-flex-row u--center">
+                <button id="playlist-button" class="c-button c--primary c--full-width" type="button" name="Add Playlist"><span class="glyphicon glyphicon-plus"></span> Playlist</button>
             </div>
             <!-- Playlists  -->
             <div id="playlists" class="c-table-grid"></div>
         </section>
 
-        <!-- search Tab -->
+        <!-- Search Tab -->
         <section id="search-tab-content" class="t-tab t-search">
+            <div class="c-search-bar__container">
+                <input class="c-search-bar c--full-width" type="text" placeholder="Search">
+            </div>
+            <!-- Search Results -->
+            <div id="search-results" class="c-table-grid"></div>
         </section>
     </body>
     <script src="../app/app.js"></script>

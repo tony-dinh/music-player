@@ -1,5 +1,5 @@
 * {
-    box-sizing: border-box;
+    box-sizing: border-box !important;
 }
 
 html {
@@ -15,4 +15,31 @@ body {
     padding-top: $nav-bar-height;
     background-color: $primary-color-accent-light;
     overflow: scroll;
+}
+
+input {
+    text-align: center;
+    color: $grey-30;
+
+    &:focus {
+        text-align: left;
+        outline-style: none;
+    }
+}
+
+::-webkit-input-placeholder { /* Chrome */
+    color: $grey-70;
+    opacity: .8;
+}
+:-ms-input-placeholder { /* IE 10+ */
+    color: $grey-70;
+    opacity: .8;
+}
+::-moz-placeholder { /* Firefox 19+ */
+    color: $grey-70;
+    opacity: .8;
+}
+:-moz-placeholder { /* Firefox 4 - 18 */
+    color: $grey-70;
+    opacity: .8;
 }

@@ -1,0 +1,32 @@
+.c-search-bar {
+    display: block;
+    padding: map-get($spacing__map, medium) map-get($spacing__map, large);
+    margin: auto;
+
+    border: none;
+    border-radius: $border-radius;
+
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.c-search-bar.c--full-width {
+    width: 100%;
+}
+
+.c-search-bar__container {
+    padding: 0 map-get($spacing__map, large);
+}
+
+@media (min-width : 768px) {
+    .c-search-bar.c--full-width {
+        max-width: 60vw;
+    }
+
+    #playlist-search-bar {
+        margin: auto;
+        margin-bottom: map-get($spacing__map, large) * 2;
+        color: white;
+        background-color: $primary-color;
+    }
+}
