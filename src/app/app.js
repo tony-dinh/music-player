@@ -1,5 +1,11 @@
+var TITLE_SORT_KEY = 'title';
+var ARTIST_SORT_KEY = 'artist';
+
 var PLAYLISTS = window.MUSIC_DATA ? window.MUSIC_DATA.playlists : undefined;
 var SONGS = window.MUSIC_DATA ? window.MUSIC_DATA.songs : undefined;
+var ARTIST_SORTED_SONGS = undefined;
+var TITLE_SORTED_SONGS = undefined;
+
 
 // Spacer used for alignment on desktop grid layout
 var _addSpacerTo = function(elementId) {
@@ -11,28 +17,79 @@ var _addSpacerTo = function(elementId) {
 
 // Library UI
 // ---
-var _loadSongs = function() {
+var _getSongsSortedBy = function(sortKey) {
+    var sortSongsBy = function(sortKey) {
+        return SONGS.sort(function(songA, songB) {
+            var inAscendingOrder = songA[sortKey].replace(/^The(\s)+/i, '') <= songB[sortKey].replace(/^The(\s)+/i, '');
+            return inAscendingOrder ? -1 : 1;
+        });
+    };
+    switch (sortKey) {
+        case TITLE_SORT_KEY:
+            if (!TITLE_SORTED_SONGS) {
+                TITLE_SORTED_SONGS = JSON.parse(JSON.stringify(sortSongsBy(TITLE_SORT_KEY)));
+            }
+            return TITLE_SORTED_SONGS;
+        default:
+            if (!ARTIST_SORTED_SONGS) {
+                ARTIST_SORTED_SONGS = JSON.parse(JSON.stringify(sortSongsBy(ARTIST_SORT_KEY)));
+            }
+            return ARTIST_SORTED_SONGS;
+    }
+};
+
+var _loadSongsSortedBy = function(sortKey) {
     if (!Array.isArray(SONGS) || SONGS.length == 0) {
         return;
     }
 
+    var sortedSongs = _getSongsSortedBy(sortKey);
+    var library = document.getElementById('library');
     var addSong = function(songObj) {
-        var library = document.getElementById('library');
         var songEl = document.createElement('div');
 
         songEl.className = 'c-table-grid__item c-library__item'
-        songEl.innerHTML = '<div class="c-library__item-content c-table-grid__item-content"><img class="c-library__item-art" src="../app/styles/assets/150.png" alt="Album Art"><div class="c-library__item-text u-flex-col u--center"><h4>' + songObj.title + '</h4><h5>' + songObj.album + '</h5></div><div class="c-library__item-disclosure"><button type="button" name="Play" class="c-button c--disclosure glyphicon glyphicon-play"></button><button type="button" name="Add To Playlist" class="c-button c--disclosure glyphicon glyphicon-plus-sign"></button></div></div>'
+        songEl.innerHTML = '<div class="c-library__item-content c-table-grid__item-content"><img class="c-library__item-art" src="../app/styles/assets/150.png" alt="Album Art"><div class="c-library__item-text u-flex-col u--center"><h4>' + songObj.title + '</h4><h5>' + songObj.artist + '</h5></div><div class="c-library__item-disclosure"><button type="button" name="Play" class="c-button c--disclosure glyphicon glyphicon-play"></button><button type="button" name="Add To Playlist" class="c-button c--disclosure glyphicon glyphicon-plus-sign"></button></div></div>'
         library.append(songEl);
     }
 
-    SONGS.forEach(function(song) {
+    // Clear all existing songs
+    library.innerHTML = '';
+    sortedSongs.forEach(function(song) {
         addSong(song);
     });
+    _addSpacerTo('library');
+};
+
+var _registerSortEvents = function() {
+    var activeClass = 'c--active';
+    var sortButtons = document.getElementsByClassName('js-library-sort-button');
+
+    var setActive = function(el) {
+        var prevActiveButton = document.getElementsByClassName('js-library-sort-button c--active')[0];
+        prevActiveButton.className = prevActiveButton.className.replace(RegExp('\\b' + activeClass + '\\b'), '');
+        el.className = el.className + ' ' + activeClass;
+    };
+
+    var sortEventHandler = function(e) {
+        e.stopPropagation();
+        _loadSongsSortedBy(this.dataset.key);
+        setActive(this);
+    };
+
+    for (var i = 0; i < sortButtons.length ; i++) {
+        var button = sortButtons[i];
+        button.addEventListener('click', sortEventHandler, false);
+    }
+};
+
+var _registerLibraryEvents = function() {
+    _registerSortEvents();
 };
 
 var _libraryUI = function() {
-    _loadSongs();
-    _addSpacerTo('library');
+    _loadSongsSortedBy(ARTIST_SORT_KEY);
+    _registerLibraryEvents();
 };
 
 // Playlist UI
@@ -97,7 +154,6 @@ var _registerTabEvents = function() {
             return;
         }
         setActiveTab(this);
-        // window.scrollTo(0, 0);
     };
 
     for (var i = 0; i < tabs.length ; i++) {
@@ -106,16 +162,12 @@ var _registerTabEvents = function() {
     }
 };
 
-var _registerEventHandlers = function() {
-    _registerTabEvents();
-};
-
 var appUI = function() {
     _libraryUI();
     _playlistUI();
     _searchUI();
 
-    _registerEventHandlers();
+    _registerTabEvents();
 };
 
 appUI();

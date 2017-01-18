@@ -152,7 +152,7 @@ input {
   padding: 0 12px; }
 
 .c-button.c--active {
-  box-shadow: inset 0px 2px 8px 0px rgba(77, 77, 77, 0.7); }
+  box-shadow: inset 0px 4px 8px 0px rgba(77, 77, 77, 0.7); }
 
 .c-button.c--disclosure {
   background-color: inherit;
@@ -290,6 +290,7 @@ a.c-nav-bar__tab {
     font-weight: 300;
     font-size: 14px;
     line-height: normal;
+    white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden; }
   .c-library__item-text h5 {
@@ -297,6 +298,7 @@ a.c-nav-bar__tab {
     color: gray;
     font-weight: 300;
     font-size: 12px;
+    white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden; }
 
@@ -324,6 +326,7 @@ a.c-nav-bar__tab {
     border: solid 1px #b3b3b3; }
 
   .c-library__item-text {
+    width: 100%;
     align-items: center; }
 
   .c-library__item-disclosure {
