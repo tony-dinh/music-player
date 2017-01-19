@@ -7,13 +7,24 @@ var ARTIST_SORTED_SONGS = undefined;
 var SONGS = window.MUSIC_DATA ? window.MUSIC_DATA.songs : undefined;
 var PLAYLISTS = window.MUSIC_DATA ? window.MUSIC_DATA.playlists : undefined;
 
-
 // Spacer used for alignment on desktop grid layout
 var _addSpacerTo = function(elementId) {
     var el = document.getElementById(elementId);
     var spacer = document.createElement('div');
     spacer.className = 'c-table-grid__item-spacer';
     el.append(spacer);
+};
+
+var getPlaylistWithId = function(playlistId) {
+    if (!PLAYLISTS) {
+        return undefined;
+    }
+
+    var playlists = PLAYLISTS.filter(function(playlist) {
+       return playlist.id === playlistId
+    });
+
+    return playlists.length > 0 ? playlists[0] : undefined;
 };
 
 // Library UI
@@ -51,7 +62,7 @@ var _loadSongsSortedBy = function(sortKey) {
 
         songEl.className = 'c-table-grid__item c-library__item';
         songEl.dataset.id = songObj.id;
-        songEl.innerHTML = '<div class="c-library__item-content c-table-grid__item-content"><img class="c-library__item-art" src="../app/styles/assets/150.png" alt="Album Art"><div class="c-library__item-text u-flex-col u--center"><h4>' + songObj.title + '</h4><h5>' + songObj.artist + '</h5></div><div class="c-library__item-disclosure"><button type="button" name="Play" class="js-play c-button c--disclosure glyphicon glyphicon-play"></button><button type="button" name="Add To Playlist" class="js-add-to-playlist c-button c--disclosure glyphicon glyphicon-plus-sign"></button></div></div>';
+        songEl.innerHTML = '<div class="c-library__item-content c-table-grid__item-content"><img class="c-library__item-art" src="../app/styles/assets/150.png" alt="Album Art"><div class="c-library__item-text u-flex-col u--middle"><h4>' + songObj.title + '</h4><h5>' + songObj.artist + '</h5></div><div class="c-library__item-disclosure"><button type="button" name="Play" class="js-play c-button c--disclosure glyphicon glyphicon-play"></button><button type="button" name="Add To Playlist" class="js-add-to-playlist c-button c--disclosure glyphicon glyphicon-plus-sign"></button></div></div>';
         library.append(songEl);
     }
 
@@ -92,6 +103,7 @@ var _registerAddToPlaylistEvents = function() {
     var showPlaylistSelectionFor = function(songId) {
         var overlay = document.getElementsByClassName('c-overlay')[0];
         overlay.className = overlay.className + ' c--visible';
+        overlay.dataset.songId = songId;
 
         // TODO: use jQuery to make this more robust
         document.getElementsByTagName('body')[0].className = 'u-no-scroll';
@@ -100,7 +112,7 @@ var _registerAddToPlaylistEvents = function() {
     var addToPlaylistHandler = function(e) {
         e.stopPropagation();
         var songEl = this.closest('.c-library__item');
-        showPlaylistSelectionFor(songEl.dataset.id);
+        showPlaylistSelectionFor(parseInt(songEl.dataset.id));
     };
 
     for (var i = 0; i < buttons.length ; i++) {
@@ -117,21 +129,54 @@ var _hideOverlay = function() {
     document.getElementsByTagName('body')[0].className = '';
 };
 
+var _loadListSelector = function() {
+    var listSelector = document.getElementById('playlist-list-selector');
+    var addToListSelector = function(playlist) {
+        var playlistEl = document.createElement('li');
+        playlistEl.className = 'c-list-selector__item';
+        playlistEl.textContent = playlist.name;
+        playlistEl.dataset.id = playlist.id;
+        listSelector.append(playlistEl);
+
+        playlistEl.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var selectedPlaylist = getPlaylistWithId(parseInt(this.dataset.id));
+            var selectedSongId = parseInt(document.getElementsByClassName('c-overlay')[0].dataset.songId);
+            if (!!selectedPlaylist && !selectedPlaylist.songs.includes(selectedSongId)) {
+                console.log('playListBefore: ', selectedPlaylist.songs);
+                selectedPlaylist.songs.push(selectedSongId);
+                console.log('playListAfter adding ' + selectedSongId + ': ', selectedPlaylist.songs);
+            }
+            _hideOverlay();
+        });
+    };
+
+    _registerPlaylistSelectorEvents();
+    PLAYLISTS.forEach(addToListSelector);
+};
+
 var _registerPlaylistSelectorEvents = function() {
     var overlay = document.getElementsByClassName('c-overlay')[0];
-    overlay.addEventListener('click', function(e) {
+    var closeButton = document.getElementsByClassName('c-list-selector__close-button')[0];
+    var closeListSelectorHandler = function(e) {
         e.stopPropagation();
-        _hideOverlay();
-    });
+        // Ignore if the event source is not the listener
+        if (this === e.target) {
+            _hideOverlay();
+        }
+    };
+
+    overlay.addEventListener('click', closeListSelectorHandler);
+    closeButton.addEventListener('click', closeListSelectorHandler);
 };
 
 var _registerLibraryEvents = function() {
     _registerSortEvents();
-    _registerPlaylistSelectorEvents();
 };
 
 var _libraryUI = function() {
     _loadSongsSortedBy(ARTIST_SORT_KEY);
+    _loadListSelector();
     _registerLibraryEvents();
 };
 
@@ -148,7 +193,7 @@ var _loadPlaylists = function() {
 
         playlistEl.className = 'c-table-grid__item c-playlist__item';
         playlistEl.dataset.id = playlistObj.id;
-        playlistEl.innerHTML = '<div class="c-playlist__item-content c-table-grid__item-content"><img class="c-playlist__item-art" src="../app/styles/assets/150.png" alt="Playlist Art"><div class="c-playlist__item-text u-flex-col u--center"><h4>' + playlistObj.name + '</h4></div><div class="c-playlist__item-disclosure"><span class="glyphicon glyphicon-chevron-right"></span></div></div>';
+        playlistEl.innerHTML = '<div class="c-playlist__item-content c-table-grid__item-content"><img class="c-playlist__item-art" src="../app/styles/assets/150.png" alt="Playlist Art"><div class="c-playlist__item-text u-flex-col u--middle"><h4>' + playlistObj.name + '</h4></div><div class="c-playlist__item-disclosure"><span class="glyphicon glyphicon-chevron-right"></span></div></div>';
         playlists.append(playlistEl);
     };
 

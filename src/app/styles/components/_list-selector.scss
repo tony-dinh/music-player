@@ -1,0 +1,41 @@
+.c-list-selector__container {
+    width: 80vw;
+    max-width: 400px;
+    padding: map-get($spacing__map, large);
+    margin-bottom: 25vh;
+    background-color: $grey-97;
+    border-radius: 2px;
+}
+
+.c-list-selector__header {
+    padding: 0 0 map-get($spacing__map, large) 0;
+    border-bottom: 1px solid $grey-85;
+    color: $grey-30;
+
+    h5 {
+        margin: 0;
+        line-height: inherit;
+        font-weight: 400;
+    }
+}
+
+.c-list-selector__close-button {
+    font-size: 16px;
+    border: none;
+    background-color: inherit;
+}
+
+.c-list-selector {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-weight: 300;
+    }
+}
+
+.c-list-selector__item {
+    padding: 0 map-get($spacing__map, large);
+    height: $min-tap-target;
+    line-height: $min-tap-target;
+}

@@ -7,7 +7,12 @@
     }
 }
 
+.u-flex-row.u--middle {
+    justify-content: center;
+}
+
 .u-flex-row.u--center {
+    align-items: center;
     justify-content: center;
 }
 
@@ -20,6 +25,11 @@
     }
 }
 
+.u-flex-col.u--middle {
+    justify-content: center;
+}
+
 .u-flex-col.u--center {
+    align-items: center;
     justify-content: center;
 }

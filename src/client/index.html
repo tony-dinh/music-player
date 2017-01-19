@@ -27,8 +27,19 @@
         </header>
         <!-- Library Tab -->
         <section id="library-tab-content" class="t-tab t-library">
-            <div class="c-overlay"></div>
-            <div class="c-button__container u-flex-row u--center">
+            <div class="c-overlay u-flex-row u--center">
+                <div class="c-list-selector__container">
+                    <div class="c-list-selector">
+                        <div class="c-list-selector__header u-flex-row u--center">
+                            <h5 class="u-grow">Choose a Playlist</h5>
+                            <button class="c-list-selector__close-button glyphicon glyphicon-remove" type="button" name="List Selector Close Button"></button>
+                        </div>
+                        <ul id="playlist-list-selector">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="c-button__container u-flex-row u--middle">
                 <button class="js-library-sort-button c-button c--primary c--half-width u-margin-h-large c--active" type="button" data-key="artist" name="Sort by Artist">Sort by Artist</button>
                 <button class="js-library-sort-button c-button c--primary c--half-width u-margin-h-large" data-key='title' type="button" name="Sort by Title">Sort by Title</button>
             </div>
@@ -38,7 +49,7 @@
         <!-- Playlist Tab -->
         <section id="playlists-tab-content" class="t-tab t-playlist c--active">
             <!-- Add to Playlist Button -->
-            <div class="c-button__container u-flex-row u--center">
+            <div class="c-button__container u-flex-row u--middle">
                 <button id="playlist-button" class="c-button c--primary c--full-width" type="button" name="Add Playlist"><span class="glyphicon glyphicon-plus"></span> Playlist</button>
             </div>
             <!-- Playlists  -->
