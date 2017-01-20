@@ -18,11 +18,9 @@ body {
 }
 
 input {
-    text-align: center;
     color: $grey-30;
 
     &:focus {
-        text-align: left;
         outline-style: none;
     }
 }

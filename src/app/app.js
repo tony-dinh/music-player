@@ -27,6 +27,26 @@ var getPlaylistWithId = function(playlistId) {
     return playlists.length > 0 ? playlists[0] : undefined;
 };
 
+var _songElementFor = function(songObj) {
+    var el = document.createElement('div');
+
+    el.className = 'c-table-grid__item c-library__item';
+    el.dataset.id = songObj.id;
+    el.innerHTML = '<div class="c-library__item-content c-table-grid__item-content"><img class="c-library__item-art" src="../app/styles/assets/song-art-200.jpg" alt="Album Art"><div class="c-library__item-text u-flex-col u--middle"><h4>' + songObj.title + '</h4><h5>' + songObj.artist + '</h5></div><div class="c-library__item-disclosure"><button type="button" name="Play" class="js-play c-button c--disclosure glyphicon glyphicon-play"></button><button type="button" name="Add To Playlist" class="js-add-to-playlist c-button c--disclosure glyphicon glyphicon-plus-sign"></button></div></div>';
+
+    return el;
+};
+
+var _playlistElementFor = function(playlistObj) {
+    var el = document.createElement('div');
+
+    el.className = 'c-table-grid__item c-playlist__item';
+    el.dataset.id = playlistObj.id;
+    el.innerHTML = '<div class="c-playlist__item-content c-table-grid__item-content"><img class="c-playlist__item-art" src="../app/styles/assets/playlist-art-200.jpg" alt="Playlist Art"><div class="c-playlist__item-text u-flex-col u--middle"><h4>' + playlistObj.name + '</h4></div><div class="c-playlist__item-disclosure"><span class="glyphicon glyphicon-chevron-right"></span></div></div>';
+
+    return el;
+}
+
 // Library UI
 // ---
 var _getSongsSortedBy = function(sortKey) {
@@ -57,18 +77,12 @@ var _loadSongsSortedBy = function(sortKey) {
 
     var sortedSongs = _getSongsSortedBy(sortKey);
     var library = document.getElementById('library');
-    var addSong = function(songObj) {
-        var songEl = document.createElement('div');
-
-        songEl.className = 'c-table-grid__item c-library__item';
-        songEl.dataset.id = songObj.id;
-        songEl.innerHTML = '<div class="c-library__item-content c-table-grid__item-content"><img class="c-library__item-art" src="../app/styles/assets/150.png" alt="Album Art"><div class="c-library__item-text u-flex-col u--middle"><h4>' + songObj.title + '</h4><h5>' + songObj.artist + '</h5></div><div class="c-library__item-disclosure"><button type="button" name="Play" class="js-play c-button c--disclosure glyphicon glyphicon-play"></button><button type="button" name="Add To Playlist" class="js-add-to-playlist c-button c--disclosure glyphicon glyphicon-plus-sign"></button></div></div>';
-        library.append(songEl);
-    }
 
     // Clear all existing songs
     library.innerHTML = '';
-    sortedSongs.forEach(addSong);
+    sortedSongs.forEach(function(songObj) {
+        library.append(_songElementFor(songObj));
+    });
     _addSpacerTo('library');
 
     // TODO: remove when jQuery is allowed
@@ -97,36 +111,37 @@ var _registerSortEvents = function() {
     }
 };
 
-var _registerAddToPlaylistEvents = function() {
-    var buttons = document.getElementsByClassName('js-add-to-playlist');
+var _showPlaylistSelectionFor = function(songId) {
+    var overlay = document.getElementsByClassName('c-overlay')[0];
+    overlay.className = overlay.className + ' c--visible';
+    overlay.dataset.songId = songId;
 
-    var showPlaylistSelectionFor = function(songId) {
-        var overlay = document.getElementsByClassName('c-overlay')[0];
-        overlay.className = overlay.className + ' c--visible';
-        overlay.dataset.songId = songId;
-
-        // TODO: use jQuery to make this more robust
-        document.getElementsByTagName('body')[0].className = 'u-no-scroll';
-    };
-
-    var addToPlaylistHandler = function(e) {
-        e.stopPropagation();
-        var songEl = this.closest('.c-library__item');
-        showPlaylistSelectionFor(parseInt(songEl.dataset.id));
-    };
-
-    for (var i = 0; i < buttons.length ; i++) {
-        var button = buttons[i];
-        button.addEventListener('click', addToPlaylistHandler, false);
-    }
+    // TODO: use jQuery to make this more robust
+    document.getElementsByTagName('body')[0].className = 'u-no-scroll';
 };
 
-var _hideOverlay = function() {
+var _hidePlaylistListSelector = function() {
     var overlay = document.getElementsByClassName('c-overlay')[0];
     overlay.className = overlay.className.replace('c--visible', '');
 
     // TODO: use jQuery to make this more robust
     document.getElementsByTagName('body')[0].className = '';
+};
+
+var _addToPlaylistHandler = function(e) {
+    e.stopPropagation();
+    var songEl = this.closest('.c-library__item');
+    _showPlaylistSelectionFor(parseInt(songEl.dataset.id));
+};
+
+var _registerAddToPlaylistEvents = function() {
+    var buttons = document.getElementsByClassName('js-add-to-playlist');
+
+
+    for (var i = 0; i < buttons.length ; i++) {
+        var button = buttons[i];
+        button.addEventListener('click', _addToPlaylistHandler, false);
+    }
 };
 
 var _loadListSelector = function() {
@@ -147,7 +162,7 @@ var _loadListSelector = function() {
                 selectedPlaylist.songs.push(selectedSongId);
                 console.log('playListAfter adding ' + selectedSongId + ': ', selectedPlaylist.songs);
             }
-            _hideOverlay();
+            _hidePlaylistListSelector();
         });
     };
 
@@ -162,7 +177,7 @@ var _registerPlaylistSelectorEvents = function() {
         e.stopPropagation();
         // Ignore if the event source is not the listener
         if (this === e.target) {
-            _hideOverlay();
+            _hidePlaylistListSelector();
         }
     };
 
@@ -187,17 +202,12 @@ var _loadPlaylists = function() {
         return;
     }
 
-    var addPlaylist = function(playlistObj) {
-        var playlists = document.getElementById('playlists');
-        var playlistEl = document.createElement('div');
+    var playlists = document.getElementById('playlists');
+    playlists.innerHTML = '';
 
-        playlistEl.className = 'c-table-grid__item c-playlist__item';
-        playlistEl.dataset.id = playlistObj.id;
-        playlistEl.innerHTML = '<div class="c-playlist__item-content c-table-grid__item-content"><img class="c-playlist__item-art" src="../app/styles/assets/150.png" alt="Playlist Art"><div class="c-playlist__item-text u-flex-col u--middle"><h4>' + playlistObj.name + '</h4></div><div class="c-playlist__item-disclosure"><span class="glyphicon glyphicon-chevron-right"></span></div></div>';
-        playlists.append(playlistEl);
-    };
-
-    PLAYLISTS.forEach(addPlaylist);
+    PLAYLISTS.forEach(function(playlistObj) {
+        playlists.append(_playlistElementFor(playlistObj));
+    });
     _addSpacerTo('playlists');
 };
 
@@ -207,8 +217,66 @@ var _playlistUI = function() {
 
 // Search UI
 // ---
-var _searchUI = function() {
+var _playlistsMatching = function(searchKey) {
+    var searchKeyExp = new RegExp(searchKey, 'i');
+    return PLAYLISTS.filter(function(playlist) {
+        return searchKeyExp.test(playlist.name);
+    });
+};
 
+var _songsMatching = function(searchKey) {
+    var searchKeyExp = new RegExp(searchKey, 'i');
+    return SONGS.filter(function(song) {
+        return searchKeyExp.test(song.artist) || searchKeyExp.test(song.title);
+    });
+};
+
+var _registerSearchEvents = function() {
+    var searchBar = document.getElementById('search-bar');
+    var dopple = document.getElementsByClassName('c-search-bar__dopple')[0];
+    var searchResults = document.getElementById('search-results');
+
+    searchBar.addEventListener('input', function(e) {
+        searchResults.innerHTML = '';
+        if (searchBar.value.length === 0) {
+            return;
+        }
+        var matchingPlaylists = _playlistsMatching(searchBar.value);
+        var matchingSongs = _songsMatching(searchBar.value);
+
+        matchingPlaylists.forEach(function(playlistObj) {
+            searchResults.append(_playlistElementFor(playlistObj));
+        });
+        matchingSongs.forEach(function(songObj) {
+            var songEl = _songElementFor(songObj);
+            var addButton = songEl.querySelector('.js-add-to-playlist');
+            addButton.addEventListener('click', _addToPlaylistHandler);
+            searchResults.append(songEl);
+        });
+    });
+
+    searchBar.addEventListener('blur', function() {
+        var activeClass = 'c--active';
+        if (searchBar.value.length === 0) {
+            searchBar.className = searchBar.className.replace(activeClass, '');
+            return;
+        }
+
+        if (searchBar.classList.contains(activeClass)) {
+            return;
+        }
+
+        searchBar.className = searchBar.className + ' ' + activeClass;
+    });
+
+    dopple.addEventListener('click', function(e) {
+        searchBar.focus();
+        e.stopPropagation();
+    });
+};
+
+var _searchUI = function() {
+    _registerSearchEvents();
 };
 
 // Event Handling
@@ -240,6 +308,7 @@ var _registerTabEvents = function() {
         if (this.classList.contains(activeClass)) {
             return;
         }
+        _hidePlaylistListSelector();
         setActiveTab(this);
     };
 

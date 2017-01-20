@@ -1,21 +1,35 @@
 .c-search-bar {
     display: block;
+    width: 74px;
     padding: map-get($spacing__map, medium) map-get($spacing__map, large);
-    margin: auto;
 
     border: none;
     border-radius: $border-radius;
 
     font-weight: 300;
     letter-spacing: 1px;
+    transition: width 100ms;
 }
 
-.c-search-bar.c--full-width {
+.c-search-bar:focus, .c-search-bar.c--active {
     width: 100%;
 }
 
 .c-search-bar__container {
     padding: 0 map-get($spacing__map, large);
+}
+
+.c-search-bar__dopple.c--full-width {
+    width: 100%;
+    margin: auto;
+    background-color: white;
+    border-radius: $border-radius;
+}
+
+.c-search-bar__icon {
+    margin-left: map-get($spacing__map, large);
+    color: $grey-70;
+    opacity: .8;
 }
 
 @media (min-width : 768px) {

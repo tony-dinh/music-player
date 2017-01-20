@@ -14,10 +14,8 @@ body {
   overflow: scroll; }
 
 input {
-  text-align: center;
   color: #4d4d4d; }
   input:focus {
-    text-align: left;
     outline-style: none; }
 
 ::-webkit-input-placeholder {
@@ -196,7 +194,7 @@ input {
 .c-list-selector__header {
   padding: 0 0 12px 0;
   border-bottom: 1px solid #d9d9d9;
-  color: #4d4d4d; }
+  color: #a370d0; }
   .c-list-selector__header h5 {
     margin: 0;
     line-height: inherit;
@@ -216,7 +214,8 @@ input {
 .c-list-selector__item {
   padding: 0 12px;
   height: 44px;
-  line-height: 44px; }
+  line-height: 44px;
+  color: #a370d0; }
 
 .c-nav-bar {
   display: flex;
@@ -274,18 +273,30 @@ a.c-nav-bar__tab {
 
 .c-search-bar {
   display: block;
+  width: 74px;
   padding: 8px 12px;
-  margin: auto;
   border: none;
   border-radius: 6px;
   font-weight: 300;
-  letter-spacing: 1px; }
+  letter-spacing: 1px;
+  transition: width 100ms; }
 
-.c-search-bar.c--full-width {
+.c-search-bar:focus, .c-search-bar.c--active {
   width: 100%; }
 
 .c-search-bar__container {
   padding: 0 12px; }
+
+.c-search-bar__dopple.c--full-width {
+  width: 100%;
+  margin: auto;
+  background-color: white;
+  border-radius: 6px; }
+
+.c-search-bar__icon {
+  margin-left: 12px;
+  color: #b3b3b3;
+  opacity: .8; }
 
 @media (min-width: 768px) {
   .c-search-bar.c--full-width {
@@ -327,7 +338,7 @@ a.c-nav-bar__tab {
   .c-table-grid__item-spacer {
     flex-grow: 1; } }
 .c-library__item-content {
-  height: 72px;
+  height: 64px;
   border-color: #b3b3b3;
   margin: 0 12px; }
 
@@ -335,8 +346,8 @@ a.c-nav-bar__tab {
   background-color: #ddcced; }
 
 .c-library__item-art {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   margin: 12px;
   border: solid 1px #b3b3b3; }
 
@@ -394,7 +405,7 @@ a.c-nav-bar__tab {
   .c-library__item-disclosure {
     display: none; } }
 .c-playlist__item-content {
-  height: 72px;
+  height: 64px;
   border-color: #b3b3b3;
   margin: 0 12px; }
 
@@ -402,8 +413,8 @@ a.c-nav-bar__tab {
   background-color: #ddcced; }
 
 .c-playlist__item-art {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   margin: 12px;
   border: solid 1px #b3b3b3; }
 
@@ -427,6 +438,7 @@ a.c-nav-bar__tab {
   align-items: center;
   height: 100%;
   margin: 0 12px;
+  padding: 8px;
   font-size: 24px;
   color: gray; }
 

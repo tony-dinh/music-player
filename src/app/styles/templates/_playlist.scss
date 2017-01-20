@@ -1,5 +1,5 @@
 .c-playlist__item-content {
-    height: 72px;
+    height: $art-size + 2 * map-get($spacing__map, large);
     border-color: $grey-70;
     margin: 0 map-get($spacing__map, large);
 }
@@ -9,8 +9,8 @@
 }
 
 .c-playlist__item-art {
-    width: 48px;
-    height: 48px;
+    width: $art-size;
+    height: $art-size;
     margin: map-get($spacing__map, large);
     border: solid 1px $grey-70;
 }
@@ -39,6 +39,7 @@
     align-items: center;
     height: 100%;
     margin: 0 map-get($spacing__map, large);
+    padding: 8px;
     font-size: 24px;
     color: $grey-50;
 }

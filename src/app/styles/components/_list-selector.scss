@@ -10,7 +10,7 @@
 .c-list-selector__header {
     padding: 0 0 map-get($spacing__map, large) 0;
     border-bottom: 1px solid $grey-85;
-    color: $grey-30;
+    color: $primary-color;
 
     h5 {
         margin: 0;
@@ -38,4 +38,5 @@
     padding: 0 map-get($spacing__map, large);
     height: $min-tap-target;
     line-height: $min-tap-target;
+    color: $primary-color;
 }
