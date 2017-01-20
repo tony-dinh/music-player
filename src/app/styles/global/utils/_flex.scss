@@ -3,17 +3,17 @@
     flex-direction: row !important;
 
     & .u-grow {
-        flex-grow: 1;
+        flex-grow: 1 !important;
     }
 }
 
 .u-flex-row.u--middle {
-    justify-content: center;
+    justify-content: center !important;
 }
 
 .u-flex-row.u--center {
-    align-items: center;
-    justify-content: center;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .u-flex-col {
@@ -21,15 +21,15 @@
     flex-direction: column !important;
 
     & .u-grow {
-        flex-grow: 1;
+        flex-grow: 1 !important;
     }
 }
 
 .u-flex-col.u--middle {
-    justify-content: center;
+    justify-content: center !important;
 }
 
 .u-flex-col.u--center {
-    align-items: center;
-    justify-content: center;
+    align-items: center !important;
+    justify-content: center !important;
 }
