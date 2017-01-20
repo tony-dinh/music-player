@@ -18,7 +18,7 @@
 .c-playlist__item-text {
     flex-grow: 1;
     height: 100%;
-    padding: map-get($spacing__map, large);
+    padding: map-get($spacing__map, large) 0;
 
     overflow: hidden;
     white-space: nowrap;
@@ -55,7 +55,7 @@
     .c-playlist__item-content {
         align-items: center;
         height: inherit;
-        padding: 0 map-get($spacing__map, large) * 2;
+        padding: map-get($spacing__map, large);
     }
 
     .c-playlist__item-art {

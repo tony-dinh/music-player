@@ -17,7 +17,7 @@
 
 .c-library__item-text {
     flex-grow: 1;
-    padding: map-get($spacing__map, large);
+    padding: map-get($spacing__map, large) 0;
     height: 100%;
 
     overflow: hidden;
@@ -66,7 +66,7 @@
     .c-library__item-content {
         align-items: center;
         height: inherit;
-        padding: 0 map-get($spacing__map, large) * 2;
+        padding: map-get($spacing__map, large);
     }
 
     .c-library__item-art {
@@ -79,9 +79,5 @@
     .c-library__item-text {
         width: 100%;
         align-items: center;
-    }
-
-    .c-library__item-disclosure {
-        display: none;
     }
 }
