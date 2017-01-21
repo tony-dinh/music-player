@@ -25,6 +25,7 @@
 
     h4 {
         margin: 0 0 4px 0;
+        width: 100%;
         color: $primary-color;
         font-weight: 300;
         font-size: 14px;
@@ -79,5 +80,6 @@
     .c-library__item-text {
         width: 100%;
         align-items: center;
+        text-align: center;
     }
 }

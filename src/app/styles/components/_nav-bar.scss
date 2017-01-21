@@ -1,4 +1,4 @@
-.c-nav-bar {
+.c-nav-bar__tab-container {
     display: flex;
     flex-direction: row;
     position: fixed;
@@ -6,17 +6,27 @@
     left:0;
     z-index: $sky-layer;
 
+    margin: 0;
     padding: map-get($spacing__map, large);
     padding-bottom: 0;
     width: 100%;
     height: $nav-bar-height;
 
+    list-style: none;
+    box-shadow: 0px -1px 4px 0px $alpha-shadow;
     background-color: $grey-97;
     opacity: .95;
 }
 
-a.c-nav-bar__tab {
+a {
     text-decoration: none;
+    &:focus {
+        text-decoration: none;
+        outline: none;
+    }
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .c-nav-bar__tab {
@@ -27,11 +37,13 @@ a.c-nav-bar__tab {
 
     font-size: 11px;
     font-weight: 300;
-    color: $grey-70;
+}
 
-    div {
-        text-decoration: none;
-    }
+.c-nav-bar__tab-label {
+    margin: map-get($spacing__map, small) 0;
+    font-weight: 200;
+    font-size: 11px;
+    color: $grey-70;
 }
 
 .c-nav-bar__tab-icon {
@@ -40,13 +52,37 @@ a.c-nav-bar__tab {
 }
 
 .c-nav-bar__tab.c--active {
-    color: $primary-color;
-
     .c-nav-bar__tab-icon {
+        color: $primary-color;
+    }
+
+    .c-nav-bar__tab-label {
         color: $primary-color;
     }
 }
 
-.c-nav-bar__tab:hover {
+.c-nav-bar__tab-icon {
+    &.glyphicon-list {
+        display: inline-block;
+    }
+
+    &.glyphicon-th {
+        display: none;
+    }
+}
+
+.c-nav-bar__tab:hover .c-nav-bar__tab-label{
     color: $primary-color;
+}
+
+@media (min-width : 768px) {
+    .c-nav-bar__tab-icon {
+        &.glyphicon-list {
+            display: none;
+        }
+
+        &.glyphicon-th {
+            display: inline-block;
+        }
+    }
 }

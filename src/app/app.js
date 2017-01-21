@@ -175,9 +175,7 @@ var _loadListSelector = function() {
             var selectedPlaylist = getPlaylistWithId(this.dataset.id);
             var selectedSongId = parseInt(document.getElementsByClassName('c-overlay')[0].dataset.songId);
             if (!!selectedPlaylist && !selectedPlaylist.songs.includes(selectedSongId)) {
-                console.log('playListBefore: ', selectedPlaylist.songs);
                 selectedPlaylist.songs.push(selectedSongId);
-                console.log('playListAfter adding ' + selectedSongId + ': ', selectedPlaylist.songs);
             }
             _hidePlaylistListSelector();
         });

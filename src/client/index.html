@@ -6,23 +6,32 @@
         <!-- Bootstrap core CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="styles.css">
-        <script src="../app/data/music-data.js"></script>
     </head>
     <body>
         <header>
-            <nav class="c-nav-bar">
-                <a href="#" data-tab="library" class="c-nav-bar__tab">
-                    <div class="c-nav-bar__tab-icon glyphicon glyphicon-music"></div>
-                    <div>Library</div>
-                </a>
-                <a href="#" data-tab="playlists" class="c-nav-bar__tab c--active">
-                    <div class="c-nav-bar__tab-icon glyphicon glyphicon-list"></div>
-                    <div>Playlists</div>
-                </a>
-                <a href="#" data-tab="search" class="c-nav-bar__tab">
-                    <div class="c-nav-bar__tab-icon glyphicon glyphicon-search"></div>
-                    <div>Search</div>
-                </a>
+            <nav>
+                <!-- Tab Items -->
+                <ul class="c-nav-bar__tab-container">
+                    <li data-tab="library" class="c-nav-bar__tab">
+                        <a href="#">
+                            <div class="c-nav-bar__tab-icon glyphicon glyphicon-music"></div>
+                            <h5 class="c-nav-bar__tab-label">Library</h5>
+                        </a>
+                    </li>
+                    <li data-tab="playlists" class="c-nav-bar__tab c--active">
+                        <a href="#">
+                            <div class="c-nav-bar__tab-icon glyphicon glyphicon-list"></div>
+                            <div class="c-nav-bar__tab-icon glyphicon glyphicon-th"></div>
+                            <h5 class="c-nav-bar__tab-label">Playlists</h5>
+                        </a>
+                    </li>
+                    <li data-tab="search" class="c-nav-bar__tab">
+                        <a href="#">
+                            <div class="c-nav-bar__tab-icon glyphicon glyphicon-search"></div>
+                            <h5 class="c-nav-bar__tab-label">Search</h5>
+                        </a>
+                    </li>
+                </ul>
             </nav>
         </header>
 
@@ -41,34 +50,34 @@
         </div>
 
         <!-- Library Tab -->
-        <section id="library-tab-content" class="t-tab">
+        <div id="library-tab-content" class="t-tab">
             <div class="c-button__container u-flex-row u--middle">
                 <button class="js-library-sort-button c-button c--primary c--half-width u-margin-h-large c--active" type="button" data-key="artist" name="Sort by Artist">Sort by Artist</button>
                 <button class="js-library-sort-button c-button c--primary c--half-width u-margin-h-large" data-key='title' type="button" name="Sort by Title">Sort by Title</button>
             </div>
             <div id="library" class="c-table-grid"></div>
-        </section>
+        </div>
 
         <!-- Playlist Tab -->
-        <section id="playlists-tab-content" class="t-tab c--active">
+        <div id="playlists-tab-content" class="t-tab c--active">
             <!-- Add to Playlist Button -->
             <div class="c-button__container u-flex-row u--middle">
                 <button id="playlist-button" class="c-button c--primary c--full-width" type="button" name="Add Playlist"><span class="glyphicon glyphicon-plus"></span> Playlist</button>
             </div>
             <!-- Playlists  -->
             <div id="playlists" class="c-table-grid"></div>
-        </section>
+        </div>
 
         <!-- Playlist Details -->
-        <section id="playlist-details" class="t-tab">
+        <div id="playlist-details" class="t-tab">
             <div class="c-playlist-details__heading-container u-padding-large">
                 <h1>Playlist Name</h1>
             </div>
             <div id="playlist-song-list" class="c-table-grid"></div>
-        </section>
+        </div>
 
         <!-- Search Tab -->
-        <section id="search-tab-content" class="t-tab">
+        <div id="search-tab-content" class="t-tab">
             <div class="c-search-bar__container">
                 <div class="c-search-bar__dopple c--full-width u-flex-row u--center">
                     <span class="c-search-bar__icon glyphicon glyphicon-search"></span>
@@ -77,10 +86,11 @@
             </div>
             <!-- Search Results -->
             <div id="search-results" class="">
-                <section class="c-search__playlist-results c-table-grid"></section>
-                <section class="c-search__song-results c-table-grid"></section>
+                <div class="c-search__playlist-results c-table-grid"></div>
+                <div class="c-search__song-results c-table-grid"></div>
             </div>
-        </section>
+        </div>
+        <script src="../app/data/music-data.js"></script>
+        <script src="../app/app.js"></script>
     </body>
-    <script src="../app/app.js"></script>
 </html>

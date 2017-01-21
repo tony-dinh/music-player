@@ -1,8 +1,8 @@
 .c-search-bar {
     display: block;
-    width: 74px;
-    padding: map-get($spacing__map, medium) map-get($spacing__map, large);
-
+    width: 72px;
+    padding: map-get($spacing__map, medium);
+    padding-right: map-get($spacing__map, large);
     border: none;
     border-radius: $border-radius;
 
@@ -24,16 +24,23 @@
     margin: auto;
     background-color: white;
     border-radius: $border-radius;
+    cursor: pointer;
 }
 
 .c-search-bar__icon {
     margin-left: map-get($spacing__map, large);
+    height: 15px;
+    font-size: 12px;
     color: $grey-70;
     opacity: .8;
 }
 
 @media (min-width : 768px) {
-    .c-search-bar.c--full-width {
+    .c-search-bar__container {
+        margin-bottom: map-get($spacing__map, large) * 2;
+    }
+
+    .c-search-bar__dopple.c--full-width {
         max-width: 60vw;
     }
 

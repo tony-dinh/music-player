@@ -4,6 +4,10 @@
     margin: 0 map-get($spacing__map, large);
 }
 
+.c-playlist__item {
+    cursor: pointer;
+}
+
 .c-playlist__item:active {
     background-color: $primary-color-accent;
 }
@@ -74,5 +78,9 @@
 
     .c-playlist__item-disclosure {
         display: none;
+    }
+
+    .c-playlist-details__heading-container {
+        margin-bottom: map-get($spacing__map, large);
     }
 }
