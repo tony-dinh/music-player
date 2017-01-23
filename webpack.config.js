@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 var rootDir = process.cwd();
 
-var entryPath = path.resolve(rootDir, 'src/app/app.js');
+var entryPath = path.resolve(rootDir, 'src/app/js/app.js');
 var outputPath = path.resolve(rootDir, 'src/client');
 
 var isProd = process.env.NODE_ENV === 'production';
@@ -12,6 +12,11 @@ var config = {
     output: {
         filename: 'client.js',
         path: outputPath
+    },
+    resolve: {
+        alias: {
+            jquery: path.resolve(rootDir, 'src/app/js/vendor/jquery-3.1.1.min.js'),
+        }
     },
     module: {
         loaders: [

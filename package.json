@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "description": "A music player created as part of a series of exercises for a course in Web Information Systems.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tony-dinh/music-player.git"
@@ -13,7 +10,6 @@
   "author": "Tony Dinh",
   "dependencies": {
     "babel-runtime": "^6.22.0",
-    "jquery": "^3.1.1",
     "webpack": "^1.14.0"
   },
   "devDependencies": {
