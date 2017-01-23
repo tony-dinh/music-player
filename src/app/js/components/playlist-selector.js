@@ -1,5 +1,10 @@
+import $ from 'jquery'
+import Utils from '../global/utils'
+
 const OVERLAY_SELECTOR = '.c-overlay'
+const LIST_SEL_SELECTOR = '#playlist-list-selector'
 const VISIBLE_CLASS = 'c--visible'
+const PLAYLISTS = MUSIC_DATA.playlists
 
 const PlaylistSelector = {}
 
@@ -18,28 +23,56 @@ PlaylistSelector.hide = function() {
     $overlay.removeClass(VISIBLE_CLASS)
 }
 
-// var _loadListSelector = function() {
-//     var listSelector = document.getElementById('playlist-list-selector');
-//     var addToListSelector = function(playlist) {
-//         var playlistEl = document.createElement('li');
-//         playlistEl.className = 'c-list-selector__item';
-//         playlistEl.textContent = playlist.name;
-//         playlistEl.dataset.id = playlist.id;
-//         listSelector.append(playlistEl);
-//
-//         playlistEl.addEventListener('click', function(e) {
-//             e.stopPropagation();
-//             var selectedPlaylist = getPlaylistWithId(this.dataset.id);
-//             var selectedSongId = parseInt(document.getElementsByClassName('c-overlay')[0].dataset.songId);
-//             if (!!selectedPlaylist && !selectedPlaylist.songs.includes(selectedSongId)) {
-//                 selectedPlaylist.songs.push(selectedSongId);
-//             }
-//             _hidePlaylistListSelector();
-//         });
-//     };
-//
-//     _registerPlaylistSelectorEvents();
-//     PLAYLISTS.forEach(addToListSelector);
-// }
+PlaylistSelector.addPlaylist = function(playlistObj) {
+    const $listSel = $(LIST_SEL_SELECTOR)
+    const $selectorEl = $('<li></li>')
+    const selectorClass = 'c-list-selector__item'
+
+    $selectorEl
+        .addClass(selectorClass)
+        .text(playlistObj.name)
+        .attr('data-id', playlistObj.id)
+
+    $listSel.append($selectorEl[0])
+}
+
+const _bindEvents = function() {
+    const $overlay = $(OVERLAY_SELECTOR)
+    const $listSelItems = $('.c-list-selector__item')
+    const $listSelCloseBtn = $('.c-list-selector__close-button')
+
+    $overlay.on('click', function(e) {
+        e.stopPropagation()
+        if (this === e.target) {
+            PlaylistSelector.hide()
+        }
+    })
+
+    $listSelCloseBtn.on('click', function(e) {
+        e.stopPropagation()
+        if (this === e.target) {
+            PlaylistSelector.hide()
+        }
+    })
+
+    $listSelItems.on('click', function(e) {
+        e.stopPropagation()
+        const selectedSongId = $overlay.data('song-id')
+        const selectedPlaylistId = $(this).data('id')
+
+        Utils.addSongToPlaylist(selectedSongId, selectedPlaylistId)
+        PlaylistSelector.hide()
+    })
+}
+
+const _playlistSelectorUI = function() {
+    if (!$.isArray(PLAYLISTS) || PLAYLISTS.length === 0) {
+        return
+    }
+    PLAYLISTS.forEach(PlaylistSelector.addPlaylist)
+    _bindEvents()
+}
+
+_playlistSelectorUI()
 
 export default PlaylistSelector

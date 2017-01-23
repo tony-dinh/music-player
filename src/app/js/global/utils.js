@@ -1,3 +1,6 @@
+const SONGS = MUSIC_DATA.songs
+const PLAYLISTS = MUSIC_DATA.playlists
+
 const Utils = {}
 
 Utils.getObjWithId = function(arr, id) {
@@ -30,9 +33,13 @@ Utils.playlistElementFor = function(playlistObj) {
         .html(playlistElHTML)
 }
 
-Utils.sortSongsBy = function(sortKey) {
-    const titleSortKey = 'title';
-    const artistSortKey = 'artist';
+Utils.addSongToPlaylist = function(songId, playlistId) {
+    const playlistObj = Utils.getObjWithId(PLAYLISTS, playlistId)
+    const songIdInt = parseInt(songId)
+
+    if (!!playlistObj && !playlistObj.songs.includes(songIdInt)) {
+        playlistObj.songs.push(songIdInt)
+    }
 }
 
 export default Utils
