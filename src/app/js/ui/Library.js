@@ -1,4 +1,3 @@
-import Utils from '../global/utils'
 import PlaylistSelector from '../components/playlist-selector'
 
 const TITLE_SORT_KEY = 'title'
@@ -38,7 +37,7 @@ const _loadSongsSortedBy = function(sortKey) {
     const sortedSongs = _getSongsSortedBy(sortKey)
 
     sortedSongs.forEach((songObj) => {
-        library.append(Utils.songElementFor(songObj)[0])
+        library.append(UTILS.songElementFor(songObj)[0])
     })
 }
 

@@ -1,10 +1,6 @@
-import $ from 'jquery'
-import Utils from '../global/utils'
-
 const OVERLAY_SELECTOR = '.c-overlay'
 const LIST_SEL_SELECTOR = '#playlist-list-selector'
 const VISIBLE_CLASS = 'c--visible'
-const PLAYLISTS = MUSIC_DATA.playlists
 
 const PlaylistSelector = {}
 
@@ -60,7 +56,7 @@ const _bindEvents = function() {
         const selectedSongId = $overlay.data('song-id')
         const selectedPlaylistId = $(this).data('id')
 
-        Utils.addSongToPlaylist(selectedSongId, selectedPlaylistId)
+        UTILS.addSongToPlaylist(selectedSongId, selectedPlaylistId)
         PlaylistSelector.hide()
     })
 }

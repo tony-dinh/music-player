@@ -1,6 +1,3 @@
-const SONGS = MUSIC_DATA.songs
-const PLAYLISTS = MUSIC_DATA.playlists
-
 const Utils = {}
 
 Utils.getObjWithId = function(arr, id) {
