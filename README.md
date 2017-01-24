@@ -15,7 +15,7 @@ Run the following command while at the project root the terminal to compile all 
 
 Run the following command in the terminal to enable hot loading stylistic changes:
 
-```sass --watch styles/styes.scss:client/styles.css```
+```npm run watch-style```
 
 
 Open up `src/client/index.html` in the browser to view the music player.
