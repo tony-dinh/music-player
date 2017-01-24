@@ -25,7 +25,8 @@
   },
   "license": "ISC",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "./scripts/build.sh",
+    "style-watch": "sass --watch src/app/styles/styles.scss:src/client/styles.css",
     "install-dep": "./scripts/install-dependencies.sh"
   }
 }

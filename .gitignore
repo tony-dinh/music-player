@@ -1,9 +1,9 @@
 
 # Created by https://www.gitignore.io/api/node,sass
 .DS_Store
-./src/app/js/vendor
-./src/client/client.js
-./src/client/styles.css
+src/app/js/vendor
+src/client/client.js
+src/client/styles.css
 
 ### Node ###
 # Logs
