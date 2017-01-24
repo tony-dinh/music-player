@@ -1,4 +1,4 @@
-import NavBar from '../components/nav-bar'
+import { NavBar } from '../components/nav-bar'
 
 const _loadPlaylists = function() {
     if (!$.isArray(PLAYLISTS) || PLAYLISTS.length === 0) {

@@ -2,8 +2,8 @@
 # Created by https://www.gitignore.io/api/node,sass
 .DS_Store
 src/app/js/vendor
-src/client/client.js
-src/client/styles.css
+src/client/music-app.js
+src/client/style.css
 
 ### Node ###
 # Logs
