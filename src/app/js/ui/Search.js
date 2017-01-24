@@ -5,16 +5,12 @@ const SONG_RESULTS_SELECTOR = '#search-results .c-search__song-results'
 
 const _songsMatching = function(searchKey) {
     const searchKeyExp = new RegExp(searchKey, 'i')
-    return SONGS.filter((song) => {
-        return searchKeyExp.test(song.artist) || searchKeyExp.test(song.title)
-    })
+    return SONGS.filter(song => searchKeyExp.test(song.artist) || searchKeyExp.test(song.title))
 }
 
 const _playlistsMatching = function(searchKey) {
     const searchKeyExp = new RegExp(searchKey, 'i')
-    return PLAYLISTS.filter((playlist) => {
-        return searchKeyExp.test(playlist.name)
-    })
+    return PLAYLISTS.filter(playlist => searchKeyExp.test(playlist.name))
 }
 
 const _bindEvents = function() {
