@@ -1,0 +1,32 @@
+{
+  "name": "music-player",
+  "version": "0.0.1",
+  "description": "A music player created as part of a series of exercises for a course in Web Information Systems.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tony-dinh/music-player.git"
+  },
+  "author": "Tony Dinh",
+  "dependencies": {
+    "babel-runtime": "^6.22.0",
+    "webpack": "^1.14.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-preset-es2015": "^6.22.0",
+    "jquery": "^3.1.1"
+  },
+  "engines": {
+    "node": "^6.0.0",
+    "npm": "^3.0.0"
+  },
+  "license": "ISC",
+  "scripts": {
+    "build": "./scripts/build.sh",
+    "style-watch": "sass --watch src/app/styles/styles.scss:src/client/styles.css",
+    "install-dep": "./scripts/install-dependencies.sh"
+  }
+}
