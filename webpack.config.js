@@ -10,7 +10,7 @@ var isProd = process.env.NODE_ENV === 'production';
 var config = {
     entry: entryPath,
     output: {
-        filename: 'client.js',
+        filename: 'music-app.js',
         path: outputPath
     },
     resolve: {

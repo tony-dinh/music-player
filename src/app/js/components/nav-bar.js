@@ -19,13 +19,38 @@ NavBar.setTabActive = function($tab) {
     NavBar.setTabViewActive($(activeTabViewSelector))
 }
 
-NavBar.bindEvents = function() {
+const _bindEvents = function() {
     $('body').on('click', '.c-nav-bar__tab', function(e) {
         e.stopPropagation()
         PlaylistSelector.hide()
 
-        NavBar.setTabActive($(this))
+        const $selectedTab = $(this)
+        const tab = $selectedTab.data('tab')
+        NavBar.setTabActive($selectedTab)
+
+        if (document.origin !== "null") {
+            history.pushState({'tab': tab}, tab, '/' + tab)
+        }
     })
 }
 
-export default NavBar
+const _selectInitialTab = function() {
+    const pathMatchesTab = function(tab) {
+        return (new RegExp('^/' + tab + '(/*)?#?')).test(location.pathname)
+    }
+
+    if (pathMatchesTab('library')) {
+        NavBar.setTabActive($('.c-nav-bar__tab[data-tab=library]'))
+    } else if (pathMatchesTab('search')) {
+        NavBar.setTabActive($('.c-nav-bar__tab[data-tab=search]'))
+    } else {
+        NavBar.setTabActive($('.c-nav-bar__tab[data-tab=playlists]'))
+    }
+}
+
+const NavBarUI = function() {
+    _bindEvents()
+    _selectInitialTab()
+}
+
+export {NavBar, NavBarUI}

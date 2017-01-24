@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Exercise 2</title>
+        <title>Exercise 3</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap core CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
+
     </head>
     <body>
         <header>
@@ -18,7 +19,7 @@
                             <h5 class="c-nav-bar__tab-label">Library</h5>
                         </a>
                     </li>
-                    <li data-tab="playlists" class="c-nav-bar__tab c--active">
+                    <li data-tab="playlists" class="c-nav-bar__tab">
                         <a href="#">
                             <div class="c-nav-bar__tab-icon glyphicon glyphicon-list"></div>
                             <div class="c-nav-bar__tab-icon glyphicon glyphicon-th"></div>
@@ -59,7 +60,7 @@
         </div>
 
         <!-- Playlist Tab -->
-        <div id="playlists-tab-content" class="t-tab c--active">
+        <div id="playlists-tab-content" class="t-tab">
             <!-- Add to Playlist Button -->
             <div class="c-button__container u-flex-row u--middle">
                 <button id="playlist-button" class="c-button c--primary c--full-width" type="button" name="Add Playlist"><span class="glyphicon glyphicon-plus"></span> Playlist</button>
@@ -91,6 +92,6 @@
             </div>
         </div>
         <script src="../app/js/data/music-data.js"></script>
-        <script src="client.js"></script>
+        <script src="music-app.js"></script>
     </body>
 </html>

@@ -26,7 +26,8 @@
   "license": "ISC",
   "scripts": {
     "build": "./scripts/build.sh",
-    "style-watch": "sass --watch src/app/styles/styles.scss:src/client/styles.css",
-    "install-dep": "./scripts/install-dependencies.sh"
+    "install-dep": "./scripts/install-dependencies.sh",
+    "start": "node ./src/server/server.js",
+    "style-watch": "sass --watch src/app/styles/styles.scss:src/client/style.css"
   }
 }
