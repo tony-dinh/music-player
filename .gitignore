@@ -1,6 +1,7 @@
 
 # Created by https://www.gitignore.io/api/node,sass
 .DS_Store
+./src/app/js/vendor
 
 ### Node ###
 # Logs

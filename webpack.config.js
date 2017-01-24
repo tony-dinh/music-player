@@ -15,7 +15,7 @@ var config = {
     },
     resolve: {
         alias: {
-            jquery: path.resolve(rootDir, 'src/app/js/vendor/jquery-3.1.1.min.js'),
+            jquery: path.resolve(rootDir, 'src/app/js/vendor/jquery.min.js'),
         }
     },
     module: {
