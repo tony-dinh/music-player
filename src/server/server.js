@@ -4,15 +4,16 @@ var port = process.env.PORT || 3000;
 
 var CLIENT_DIR = __dirname + '/../client';
 var API_DIR = __dirname + '/api';
+var VENDOR_DIR = __dirname + '/../app/js/vendor';
 var ASSET_DIR = CLIENT_DIR + '/assets';
 var INDEX_PATH = CLIENT_DIR + '/index.html';
 var STYLES_PATH = CLIENT_DIR + '/style.css';
 var JS_PATH = CLIENT_DIR + '/music-app.js';
 
 // GET
-var serveGET = function(request, response) {
+var serveGET = function(url, response) {
     response.statusCode = 200;
-    switch (request.url) {
+    switch (url) {
         case '/':
             response.statusCode = 301;
             response.setHeader('Location', '/playlists');
@@ -60,15 +61,18 @@ var serveGET = function(request, response) {
                 response.end(data);
             });
             break;
-        case '/app/js/data/music-data.js':
+        case '/app/js/vendor/jquery.min.js':
             response.setHeader('Content-Type', 'application/javascript');
-            fs.readFile(__dirname + '/../app/js/data/music-data.js', function(err, data) {
+            fs.readFile(VENDOR_DIR + '/jquery.min.js', function(err, data) {
+                if (err) {
+                    console.log(err);
+                }
                 response.end(data);
             });
             break;
-        case '/api/playlist':
+        case '/api/playlists':
             response.setHeader('Content-Type', 'application/json');
-            fs.readFile(API_DIR + '/playlist.json', function(err, data) {
+            fs.readFile(API_DIR + '/playlists.json', function(err, data) {
                 response.end(data)
             });
             break;
@@ -95,7 +99,7 @@ var server = http.createServer(function(request, response) {
     console.log('')
 
     if (request.method === 'GET') {
-        serveGET(request, response);
+        serveGET(request.url, response);
     }
 });
 

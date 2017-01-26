@@ -1,4 +1,4 @@
-import PlaylistSelector from '../components/playlist-selector'
+import { PlaylistSelector } from '../components/playlist-selector'
 
 const TITLE_SORT_KEY = 'title'
 const ARTIST_SORT_KEY = 'artist'

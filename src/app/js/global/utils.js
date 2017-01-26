@@ -30,8 +30,7 @@ Utils.playlistElementFor = function(playlistObj) {
         .html(playlistElHTML)
 }
 
-Utils.addSongToPlaylist = function(songId, playlistId) {
-    const playlistObj = Utils.getObjWithId(PLAYLISTS, playlistId)
+Utils.addSongToPlaylist = function(songId, playlistObj) {
     const songIdInt = parseInt(songId)
 
     if (!!playlistObj && !playlistObj.songs.includes(songIdInt)) {

@@ -1,13 +1,23 @@
-import $ from 'jquery'
 import Utils from './utils'
 
 const Common = {}
 
-Common.load = function() {
-    window.$ = $
+const _getMusicData = function(key) {
+    return new Promise ((resolve, reject) => {
+        $.get(`/api/${key}`, (data, status, xhr) => {
+            if (xhr.status !== 200) {
+                console.error(`Failed to retrieve ${key} data`)
+                reject()
+            }
+            resolve(data[key])
+        })
+    })
+}
+
+Common.load = async function() {
     window.UTILS = Utils
-    window.SONGS = MUSIC_DATA.songs
-    window.PLAYLISTS = MUSIC_DATA.playlists
+    window.PLAYLISTS = await _getMusicData('playlists')
+    window.SONGS = await _getMusicData('songs')
 }
 
 export default Common

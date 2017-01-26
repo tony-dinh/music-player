@@ -4,6 +4,10 @@
         ["transform-runtime", {
             "polyfill": true,
             "regenerator": true
+        }],
+        ["transform-async-to-module-method", {
+            "module": "bluebird",
+            "method": "coroutine"
         }]
     ]
 }

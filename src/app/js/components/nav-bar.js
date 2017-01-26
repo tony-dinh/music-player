@@ -1,4 +1,4 @@
-import PlaylistSelector from './playlist-selector'
+import { PlaylistSelector, PlaylistSelectorUI } from './playlist-selector'
 
 const NavBar = {}
 
@@ -49,8 +49,9 @@ const _selectInitialTab = function() {
 }
 
 const NavBarUI = function() {
+    PlaylistSelectorUI()
     _bindEvents()
     _selectInitialTab()
 }
 
-export {NavBar, NavBarUI}
+export { NavBar, NavBarUI }

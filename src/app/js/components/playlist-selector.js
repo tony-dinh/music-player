@@ -55,20 +55,19 @@ const _bindEvents = function() {
         e.stopPropagation()
         const selectedSongId = $overlay.data('song-id')
         const selectedPlaylistId = $(this).data('id')
+        const playlistObj = Utils.getObjWithId(PLAYLISTS, selectedPlaylistId)
 
-        UTILS.addSongToPlaylist(selectedSongId, selectedPlaylistId)
+        UTILS.addSongToPlaylist(selectedSongId, playlistObj)
         PlaylistSelector.hide()
     })
 }
 
-const _playlistSelectorUI = function() {
-    if (!$.isArray(PLAYLISTS) || PLAYLISTS.length === 0) {
+const PlaylistSelectorUI = function() {
+    if (!PLAYLISTS || !$.isArray(PLAYLISTS) || PLAYLISTS.length === 0) {
         return
     }
     PLAYLISTS.forEach(PlaylistSelector.addPlaylist)
     _bindEvents()
 }
 
-_playlistSelectorUI()
-
-export default PlaylistSelector
+export { PlaylistSelector, PlaylistSelectorUI }

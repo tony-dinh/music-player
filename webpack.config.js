@@ -16,6 +16,7 @@ var config = {
     resolve: {
         alias: {
             jquery: path.resolve(rootDir, 'src/app/js/vendor/jquery.min.js'),
+            bluebird: path.resolve(rootDir, 'src/app/js/vendor/bluebird.min.js')
         }
     },
     module: {
