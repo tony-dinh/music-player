@@ -16,10 +16,6 @@
     outline-style: none;
 }
 
-.c-button.c--full-width {
-    width: 100%;
-}
-
 .c-button.c--half-width {
     width: 40%;
 }
@@ -27,6 +23,11 @@
 .c-button.c--primary {
     color: white;
     background-color: $primary-color;
+}
+
+.c-button.c--secondary {
+    color: white;
+    background-color: $secondary-color;
 }
 
 .c-button__container {

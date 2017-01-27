@@ -3,13 +3,30 @@ var http = require('http');
 var port = process.env.PORT || 3000;
 
 var CLIENT_DIR = __dirname + '/../client';
-var API_DIR = __dirname + '/api';
+var SERVER_DIR = __dirname;
 var VENDOR_DIR = __dirname + '/../app/js/vendor';
-var ASSET_DIR = CLIENT_DIR + '/assets';
-var INDEX_PATH = CLIENT_DIR + '/index.html';
-var STYLES_PATH = CLIENT_DIR + '/style.css';
-var JS_PATH = CLIENT_DIR + '/music-app.js';
 
+// TODO: Make server responses scalable
+// var serveGET = function(url, response) {
+//     response.statusCode = 200;
+//     if (/^\/api\//.test(url)) {
+//         response.setHeader('Content-Type', 'application/json');
+//         fs.readFile(SERVER_DIR + url + '.json', function(err, data) {
+//             response.end(data)
+//         });
+//     } else if (/^\/assets\/*\.jpg/.test(url)) {
+//         response.setHeader('Content-Type', 'image/jpeg');
+//         fs.readFile(CLIENT_DIR + url, function(err, data) {
+//             response.end(data);
+//         });
+//         return;
+//     } else if (/\/vendor\/.*\.js/.test(url)) {
+//         response.setHeader('Content-Type', 'application/javascript');
+//         fs.readFile(VENDOR_DIR + '/jquery.min.js', function(err, data) {
+//             response.end(data);
+//         });
+//     }
+// }
 // GET
 var serveGET = function(url, response) {
     response.statusCode = 200;
@@ -21,64 +38,61 @@ var serveGET = function(url, response) {
             break;
         case '/library':
             response.setHeader('Content-Type', 'text/html');
-            fs.readFile(INDEX_PATH, function(err, data) {
+            fs.readFile(CLIENT_DIR + '/index.html', function(err, data) {
                 response.end(data);
             });
             break;
         case '/playlists':
             response.setHeader('Content-Type', 'text/html');
-            fs.readFile(INDEX_PATH, function(err, data) {
+            fs.readFile(CLIENT_DIR + '/index.html', function(err, data) {
                 response.end(data);
             });
             break;
         case '/search':
             response.setHeader('Content-Type', 'text/html');
-            fs.readFile(INDEX_PATH, function(err, data) {
+            fs.readFile(CLIENT_DIR + '/index.html', function(err, data) {
                 response.end(data);
             });
             break;
         case '/style.css':
             response.setHeader('Content-Type', 'text/css');
-            fs.readFile(STYLES_PATH, function(err, data) {
+            fs.readFile(CLIENT_DIR + url, function(err, data) {
                 response.end(data);
             });
             break;
         case '/music-app.js':
             response.setHeader('Content-Type', 'application/javascript');
-            fs.readFile(JS_PATH, function(err, data) {
+            fs.readFile(CLIENT_DIR + url, function(err, data) {
                 response.end(data);
             });
             break;
         case '/assets/song-art-200.jpg':
             response.setHeader('Content-Type', 'image/jpeg');
-            fs.readFile(ASSET_DIR + '/song-art-200.jpg', function(err, data) {
+            fs.readFile(CLIENT_DIR + url, function(err, data) {
                 response.end(data);
             });
             break;
         case '/assets/playlist-art-200.jpg':
             response.setHeader('Content-Type', 'image/jpeg');
-            fs.readFile(ASSET_DIR + '/playlist-art-200.jpg', function(err, data) {
+            fs.readFile(CLIENT_DIR + url, function(err, data) {
                 response.end(data);
             });
             break;
         case '/app/js/vendor/jquery.min.js':
             response.setHeader('Content-Type', 'application/javascript');
             fs.readFile(VENDOR_DIR + '/jquery.min.js', function(err, data) {
-                if (err) {
-                    console.log(err);
-                }
                 response.end(data);
             });
             break;
         case '/api/playlists':
             response.setHeader('Content-Type', 'application/json');
-            fs.readFile(API_DIR + '/playlists.json', function(err, data) {
+            fs.readFile(SERVER_DIR + url + '.json', function(err, data) {
                 response.end(data)
             });
             break;
         case '/api/songs':
             response.setHeader('Content-Type', 'application/json');
-            fs.readFile(API_DIR + '/songs.json', function(err, data) {
+            fs.readFile(SERVER_DIR + url + '.json', function(err, data) {
                 response.end(data)
             });
             break;

@@ -1,4 +1,15 @@
+import Events from '../global/events'
+
 import { NavBar } from '../components/nav-bar'
+import { AddPlaylistForm, AddPlaylistFormUI } from '../components/add-playlist-form'
+
+const Playlists = {}
+
+Playlists.add = function(playlistObj) {
+    const $playlist = $('#playlists')
+    const $playlistEl = UTILS.playlistElementFor(playlistObj)
+    $playlist.append($playlistEl[0])
+}
 
 const _loadPlaylists = function() {
     if (!$.isArray(PLAYLISTS) || PLAYLISTS.length === 0) {
@@ -6,14 +17,13 @@ const _loadPlaylists = function() {
     }
     // Clear all playlists
     const $playlist = $('#playlists').html('')
-    PLAYLISTS.forEach(function(playlistObj) {
-        const $playlistEl = UTILS.playlistElementFor(playlistObj)
-        $playlist.append($playlistEl[0])
-    });
+    PLAYLISTS.forEach(Playlists.add);
 }
 
 const _bindEvents = function() {
-    $('body').on('click', '.c-playlist__item', function(e) {
+    const $body = $('body')
+
+    $body.on('click', '.c-playlist__item', function(e) {
         e.stopPropagation()
 
         const $playlistDetailView = $('#playlist-details')
@@ -33,11 +43,21 @@ const _bindEvents = function() {
         })
         NavBar.setTabViewActive($playlistDetailView)
     })
+
+    $body.on('click', '#playlist-button', function(e) {
+        AddPlaylistForm.show()
+    })
+
+    $body.on(Events.names.ADD_PLAYLIST, function(e, playlistObj) {
+        Playlists.add(playlistObj)
+    })
 }
 
-const PlaylistUI = function() {
+const PlaylistsUI = function() {
+    AddPlaylistFormUI()
     _loadPlaylists()
     _bindEvents()
 }
 
-export default PlaylistUI
+export default PlaylistsUI
+export {Playlists, PlaylistsUI}

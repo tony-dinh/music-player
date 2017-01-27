@@ -1,0 +1,26 @@
+.c-add-playlist-form__container {
+    width: 80vw;
+    max-width: 400px;
+    padding: map-get($spacing__map, large);
+    margin-bottom: 25vh;
+    background-color: $grey-97;
+    border-radius: 2px;
+}
+
+.c-add-playlist-form__header {
+    padding: 0 0 map-get($spacing__map, large) 0;
+    border-bottom: 1px solid $grey-85;
+    color: $grey-30;
+
+    h5 {
+        margin: 0;
+        line-height: inherit;
+        font-weight: 400;
+    }
+}
+
+.c-add-playlist-form__close-button {
+    font-size: 16px;
+    border: none;
+    background-color: inherit;
+}

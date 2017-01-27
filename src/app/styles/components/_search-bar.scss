@@ -1,13 +1,7 @@
 .c-search-bar {
-    display: block;
     width: 72px;
-    padding: map-get($spacing__map, medium);
     padding-right: map-get($spacing__map, large);
-    border: none;
-    border-radius: $border-radius;
-
-    font-weight: 300;
-    letter-spacing: 1px;
+    border: none !important;
     transition: width 100ms;
 }
 
@@ -19,7 +13,7 @@
     padding: 0 map-get($spacing__map, large);
 }
 
-.c-search-bar__dopple.c--full-width {
+.c-search-bar__dopple {
     width: 100%;
     margin: auto;
     background-color: white;
