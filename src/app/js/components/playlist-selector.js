@@ -1,3 +1,4 @@
+import Events from '../global/events'
 import Overlay from './overlay'
 
 const LIST_SEL_SELECTOR = '.c-list-selector__container'
@@ -37,25 +38,27 @@ PlaylistSelector.addPlaylist = function(playlistObj) {
 }
 
 const _bindEvents = function() {
+    const $body = $('body')
     const $playlistSel = $(LIST_SEL_SELECTOR)
-    const $listSelItems = $('.c-list-selector__item')
     const $listSelCloseBtn = $('.c-list-selector__close-button')
 
     $listSelCloseBtn.on('click', function(e) {
         e.stopPropagation()
-        if (this === e.target) {
-            PlaylistSelector.hide()
-        }
+        PlaylistSelector.hide()
     })
 
-    $listSelItems.on('click', function(e) {
+    $body.on('click', '.c-list-selector__item', function(e) {
         e.stopPropagation()
         const selectedSongId = $playlistSel.data('song-id')
         const selectedPlaylistId = $(this).data('id')
-        const playlistObj = Utils.getObjWithId(PLAYLISTS, selectedPlaylistId)
+        const playlistObj = UTILS.getObjWithId(PLAYLISTS, selectedPlaylistId)
 
         UTILS.addSongToPlaylist(selectedSongId, playlistObj)
         PlaylistSelector.hide()
+    })
+
+    $body.on(Events.names.ADD_PLAYLIST, function(e, playlistObj) {
+        PlaylistSelector.addPlaylist(playlistObj)
     })
 }
 

@@ -17,6 +17,7 @@ AddPlaylistForm.show = function() {
     $('body').addClass('u-no-scroll')
     Overlay.show()
     $(FORM_CONTAINER_SELECTOR).removeClass(HIDDEN_CLASS)
+    $(NAME_INPUT_SELECTOR).focus()
 }
 
 AddPlaylistForm.hide = function() {
@@ -26,7 +27,11 @@ AddPlaylistForm.hide = function() {
 }
 
 const _postPlaylistData = async function() {
-
+    return new Promise((resolve, reject) => {
+        $.post('/api/playlists', JSON.stringify({playlists: PLAYLISTS}), (data, status, xhr) => {
+            console.log(data)
+        })
+    })
 }
 
 const _bindEvents = function() {

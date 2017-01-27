@@ -13,7 +13,7 @@ Overlay.hide = function() {
 }
 
 const _bindEvents = function() {
-    $(OVERLAY_SELECTOR).on('click', function(e) {
+    $('body').on('click', OVERLAY_SELECTOR, function(e) {
         e.stopPropagation()
         if (this === e.target) {
             Overlay.hide()
