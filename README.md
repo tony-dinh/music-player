@@ -1,4 +1,4 @@
-# Music Player
+# 🎵 Music Player
 
 A music player created as part of a series of exercises for a course in Web Information Systems.
 
@@ -18,8 +18,9 @@ In order to compile the files to obtain distribution-ready `.css` and `.js` file
 1. NPM 3.X.X
 1. Sass
 
-At the project ROOT, run the following command in the terminal to install dependencies:
+At the project ROOT, run the following commands in the terminal to install dependencies:
 ```
+npm install
 npm run install-dep
 ```
 
