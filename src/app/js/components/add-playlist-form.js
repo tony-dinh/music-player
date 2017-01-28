@@ -23,7 +23,6 @@ AddPlaylistForm.show = function() {
 AddPlaylistForm.hide = function() {
     $('body').removeClass('u-no-scroll')
     Overlay.hide()
-    $(FORM_CONTAINER_SELECTOR).addClass(HIDDEN_CLASS)
 }
 
 const _bindEvents = function() {

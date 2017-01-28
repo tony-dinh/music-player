@@ -1,4 +1,5 @@
-import { PlaylistSelector, PlaylistSelectorUI } from './playlist-selector'
+import Overlay from './overlay'
+import { PlaylistSelectorUI } from './playlist-selector'
 
 const NavBar = {}
 
@@ -22,7 +23,7 @@ NavBar.setTabActive = function($tab) {
 const _bindEvents = function() {
     $('body').on('click', '.c-nav-bar__tab', function(e) {
         e.stopPropagation()
-        PlaylistSelector.hide()
+        Overlay.hide()
 
         const $selectedTab = $(this)
         const tab = $selectedTab.data('tab')

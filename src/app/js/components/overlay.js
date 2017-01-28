@@ -10,6 +10,7 @@ Overlay.show = function() {
 
 Overlay.hide = function() {
     $(OVERLAY_SELECTOR).removeClass(VISIBLE_CLASS)
+    $('.js-overlay-modal').addClass(HIDDEN_CLASS)
 }
 
 const _bindEvents = function() {
@@ -17,9 +18,6 @@ const _bindEvents = function() {
         e.stopPropagation()
         if (this === e.target) {
             Overlay.hide()
-
-            // Hide all modals as well
-            $('.js-overlay-modal').addClass(HIDDEN_CLASS)
         }
     })
 }

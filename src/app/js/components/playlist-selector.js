@@ -21,9 +21,6 @@ PlaylistSelector.showSelectionFor = function(songId) {
 PlaylistSelector.hide = function() {
     $('body').removeClass('u-no-scroll')
     Overlay.hide()
-
-    const $playlistSel = $(LIST_SEL_SELECTOR)
-    $playlistSel.addClass(HIDDEN_CLASS)
 }
 
 PlaylistSelector.addPlaylist = function(playlistObj) {

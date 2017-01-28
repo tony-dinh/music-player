@@ -24,7 +24,7 @@ npm install
 npm run install-dep
 ```
 
-Then run the following command to obtain distribution-ready files:
+Then run the following command to obtain the distribution-ready files `/client/music-app.js` & `/client/style.css`:
 ```
 npm run build
 ```
