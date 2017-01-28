@@ -6,121 +6,157 @@ var CLIENT_DIR = __dirname + '/../client';
 var SERVER_DIR = __dirname;
 var VENDOR_DIR = __dirname + '/../app/js/vendor';
 
-// TODO: Make server responses scalable
-// var serveGET = function(url, response) {
-//     response.statusCode = 200;
-//     if (/^\/api\//.test(url)) {
-//         response.setHeader('Content-Type', 'application/json');
-//         fs.readFile(SERVER_DIR + url + '.json', function(err, data) {
-//             response.end(data)
-//         });
-//     } else if (/^\/assets\/*\.jpg/.test(url)) {
-//         response.setHeader('Content-Type', 'image/jpeg');
-//         fs.readFile(CLIENT_DIR + url, function(err, data) {
-//             response.end(data);
-//         });
-//         return;
-//     } else if (/\/vendor\/.*\.js/.test(url)) {
-//         response.setHeader('Content-Type', 'application/javascript');
-//         fs.readFile(VENDOR_DIR + '/jquery.min.js', function(err, data) {
-//             response.end(data);
-//         });
-//     }
-// }
-// GET
-var serveGET = function(url, response) {
-    response.statusCode = 200;
-    switch (url) {
-        case '/':
-            response.statusCode = 301;
-            response.setHeader('Location', '/playlists');
-            response.end();
-            break;
-        case '/library':
-            response.setHeader('Content-Type', 'text/html');
-            fs.readFile(CLIENT_DIR + '/index.html', function(err, data) {
-                response.end(data);
-            });
-            break;
-        case '/playlists':
-            response.setHeader('Content-Type', 'text/html');
-            fs.readFile(CLIENT_DIR + '/index.html', function(err, data) {
-                response.end(data);
-            });
-            break;
-        case '/search':
-            response.setHeader('Content-Type', 'text/html');
-            fs.readFile(CLIENT_DIR + '/index.html', function(err, data) {
-                response.end(data);
-            });
-            break;
-        case '/style.css':
-            response.setHeader('Content-Type', 'text/css');
-            fs.readFile(CLIENT_DIR + url, function(err, data) {
-                response.end(data);
-            });
-            break;
-        case '/music-app.js':
-            response.setHeader('Content-Type', 'application/javascript');
-            fs.readFile(CLIENT_DIR + url, function(err, data) {
-                response.end(data);
-            });
-            break;
-        case '/assets/song-art-200.jpg':
-            response.setHeader('Content-Type', 'image/jpeg');
-            fs.readFile(CLIENT_DIR + url, function(err, data) {
-                response.end(data);
-            });
-            break;
-        case '/assets/playlist-art-200.jpg':
-            response.setHeader('Content-Type', 'image/jpeg');
-            fs.readFile(CLIENT_DIR + url, function(err, data) {
-                response.end(data);
-            });
-            break;
-        case '/app/js/vendor/jquery.min.js':
-            response.setHeader('Content-Type', 'application/javascript');
-            fs.readFile(VENDOR_DIR + '/jquery.min.js', function(err, data) {
-                response.end(data);
-            });
-            break;
-        case '/api/playlists':
-            response.setHeader('Content-Type', 'application/json');
-            fs.readFile(SERVER_DIR + url + '.json', function(err, data) {
-                response.end(data)
-            });
-            break;
-        case '/api/songs':
-            response.setHeader('Content-Type', 'application/json');
-            fs.readFile(SERVER_DIR + url + '.json', function(err, data) {
-                response.end(data)
-            });
-            break;
-        default:
-            response.statusCode = 404;
-            response.end();
-            break;
+var status = {
+    OK: 200,
+    MOVED_PERMANENTLY: 301,
+    BAD_REQUEST: 400,
+    NOT_FOUND: 404,
+    INTERNAL_ERROR: 500
+};
+
+var isJSON = function(string) {
+    try {
+        JSON.parse(string);
+        return true;
+    } catch (e) {
+        return false;
     }
+};
+
+var endResponse = function(response, statusCode, data) {
+    response.statusCode = statusCode;
+    response.end(data);
+};
+
+var writePlaylistData = function(request, response) {
+    var body = '';
+    request
+    .on('data', function(data) {
+        body += data;
+    })
+    .on('error', function(err) {
+        endResponse(response, status.INTERNAL_ERROR);
+    })
+    .on('end', function () {
+        if (!isJSON(body)) {
+            return endResponse(response, status.BAD_REQUEST);
+        }
+        var filePath = SERVER_DIR + request.url + '.json';
+        var json = JSON.stringify(JSON.parse(body), null, 2);
+        fs.writeFile(filePath, json, function(err) {
+            if (err) {
+                return endResponse(response, status.INTERNAL_ERROR);
+            }
+            endResponse(response, status.OK);
+        });
+    });
+};
+
+var serveJsonAPI = function(path, response) {
+    response.setHeader('Content-Type', 'application/json');
+    fs.readFile(path, function(err, data) {
+        if (err) {
+            return endResponse(response, status.NOT_FOUND);
+        }
+        endResponse(response, status.OK, data);
+    });
+};
+
+var serveAsset = function(path, response) {
+    response.setHeader('Content-Type', 'image/jpeg');
+    response.setHeader('Cache-Control', 'max-age=1800');
+    fs.readFile(path, function(err, data) {
+        if (err) {
+            return endResponse(response, status.NOT_FOUND);
+        }
+        endResponse(response, status.OK, data);
+    });
+};
+
+var serveJS = function(path, response) {
+    response.setHeader('Content-Type', 'application/javascript');
+    response.setHeader('Cache-Control', 'max-age=1800');
+    fs.readFile(path, function(err, data) {
+        if (err) {
+            return endResponse(response, status.NOT_FOUND);
+        }
+        endResponse(response, status.OK, data);
+    });
+};
+
+var serveStyleSheet = function(path, response) {
+    response.setHeader('Content-Type', 'text/css');
+    response.setHeader('Cache-Control', 'max-age=1800');
+    fs.readFile(path, function(err, data) {
+        if (err) {
+            return endResponse(response, status.NOT_FOUND);
+        }
+        endResponse(response, status.OK, data);
+    });
+};
+
+var serveHTML = function(path, response) {
+    response.setHeader('Content-Type', 'text/html');
+    response.setHeader('Cache-Control', 'max-age=1800');
+    fs.readFile(path, function(err, data) {
+        if (err) {
+            return endResponse(response, status.NOT_FOUND);
+        }
+        endResponse(response, status.OK, data);
+    });
+};
+
+var serveRedirect = function(location, reponse) {
+    response.setHeader('Location', '/playlists');
+    endResponse(response, status.MOVED_PERMANENTLY);
+};
+
+var serveGET = function(url, response) {
+    // APIs
+    if (/^\/api\/.*/.test(url)) { serveJsonAPI(SERVER_DIR + url + '.json', response); }
+    // Assets
+    else if (/^\/assets\/.*\.jpg$/.test(url)) { serveAsset(CLIENT_DIR + url, response); }
+    // Client JS
+    else if (/^\/([^\/]*)\.js$/.test(url)) { serveJS(CLIENT_DIR + url, response); }
+    // Client Styles
+    else if (/^\/.*\.css$/.test(url)) { serveStyleSheet(CLIENT_DIR + url, response); }
+    // HTML
+    else if (/^\/(playlists|library|search)$/.test(url)) { serveHTML(CLIENT_DIR + '/index.html', response); }
+    // Redirect
+    else if (/^\/$/.test(url)) { serveRedirect('playlists', response); }
+    // Vendor
+    else if (/\/vendor\/.*\.js/.test(url)) { serveJS(CLIENT_DIR + '/..' + url, response); }
+    // Default
+    else { endResponse(response, status.NOT_FOUND); }
+}
+
+var servePOST = function(request, response) {
+    if (/^\/api\/playlists$/.test(request.url)) writePlaylistData(request, response);
+    else endResponse(response, status.NOT_FOUND);
 };
 
 // Create a server and provide it a callback to be executed for every HTTP request
 // coming into localhost:3000.
 var server = http.createServer(function(request, response) {
-    console.log('')
-    console.log('******');
-    console.log(request.method + ' ' + request.url);
-    console.log('******');
-    console.log('')
-
-    if (request.method === 'GET') {
-        serveGET(request.url, response);
+    if ( port === 3000) {
+        console.log('******\n' + request.method + ' ' + request.url + '******\n')
+    }
+    switch (request.method) {
+        case 'GET':
+            serveGET(request.url, response);
+            break;
+        case 'POST':
+            servePOST(request, response);
+            break;
+        default:
+        endResponse(response, status.BAD_REQUEST);
     }
 });
 
 // Start the server on port 3000
-server.listen(port, function(error) {
-    if (error) {
-        return console.log(error);
+server.listen(port, function(err) {
+    if (err) {
+        return console.log(err);
     }
     console.log('[ OK ] Music App is listening on port: ' + port + ' 👂 🎵');
 });
