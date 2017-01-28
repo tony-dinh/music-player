@@ -32,10 +32,11 @@ Utils.playlistElementFor = function(playlistObj) {
 
 Utils.addSongToPlaylist = function(songId, playlistObj) {
     const songIdInt = parseInt(songId)
-
     if (!!playlistObj && !playlistObj.songs.includes(songIdInt)) {
         playlistObj.songs.push(songIdInt)
+        return true
     }
+    return false
 }
 
 export default Utils

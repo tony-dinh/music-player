@@ -1,4 +1,5 @@
 import Events from '../global/events'
+import Request from '../global/request'
 
 import Overlay from './overlay'
 import { Playlists } from '../ui/playlists'
@@ -24,14 +25,6 @@ AddPlaylistForm.hide = function() {
     $('body').removeClass('u-no-scroll')
     Overlay.hide()
     $(FORM_CONTAINER_SELECTOR).addClass(HIDDEN_CLASS)
-}
-
-const _postPlaylistData = async function() {
-    return new Promise((resolve, reject) => {
-        $.post('/api/playlists', JSON.stringify({playlists: PLAYLISTS}), (data, status, xhr) => {
-            console.log(data)
-        })
-    })
 }
 
 const _bindEvents = function() {
@@ -60,7 +53,7 @@ const _bindEvents = function() {
     // We want to post playlist data whenever a playlist is added
     $('body').on(Events.names.ADD_PLAYLIST, function(e, playlistObj) {
         PLAYLISTS.push(playlistObj)
-        _postPlaylistData()
+        Request.postPlaylistData()
     })
 }
 

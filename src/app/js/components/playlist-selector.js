@@ -1,4 +1,6 @@
 import Events from '../global/events'
+import Request from '../global/request'
+
 import Overlay from './overlay'
 
 const LIST_SEL_SELECTOR = '.c-list-selector__container'
@@ -53,7 +55,9 @@ const _bindEvents = function() {
         const selectedPlaylistId = $(this).data('id')
         const playlistObj = UTILS.getObjWithId(PLAYLISTS, selectedPlaylistId)
 
-        UTILS.addSongToPlaylist(selectedSongId, playlistObj)
+        if (UTILS.addSongToPlaylist(selectedSongId, playlistObj)) {
+            Request.postPlaylistData()
+        }
         PlaylistSelector.hide()
     })
 
