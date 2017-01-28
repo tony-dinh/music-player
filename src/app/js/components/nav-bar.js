@@ -36,7 +36,7 @@ const _bindEvents = function() {
 
 const _selectInitialTab = function() {
     const pathMatchesTab = function(tab) {
-        return (new RegExp('^/' + tab + '(/*)?#?')).test(location.pathname)
+        return (new RegExp('^/' + tab + '((/\\.*)|#)?')).test(location.pathname)
     }
 
     if (pathMatchesTab('library')) {

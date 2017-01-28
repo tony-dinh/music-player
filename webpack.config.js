@@ -31,10 +31,10 @@ var config = {
 };
 
 if (isProd) {
-    config.plugins = config.plugins.concat([
+    config.plugins = [
         new webpack.optimize.UglifyJsPlugin(),
         new webpack.optimize.OccurrenceOrderPlugin()
-    ]);
+    ];
 } else {
     config.devtool = 'inline-source-maps';
 }

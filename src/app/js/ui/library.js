@@ -33,7 +33,7 @@ const _loadSongsSortedBy = function(sortKey) {
     if (!$.isArray(SONGS) || SONGS.length === 0) {
         return
     }
-    const $library = $('#library').html('')
+    $('#library').html('')
     const sortedSongs = _getSongsSortedBy(sortKey)
 
     sortedSongs.forEach((songObj) => {

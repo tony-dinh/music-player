@@ -16,7 +16,7 @@ const _loadPlaylists = function() {
         return
     }
     // Clear all playlists
-    const $playlist = $('#playlists').html('')
+    $('#playlists').html('')
     PLAYLISTS.forEach(Playlists.add);
 }
 

@@ -2,7 +2,6 @@ import Events from '../global/events'
 import Request from '../global/request'
 
 import Overlay from './overlay'
-import { Playlists } from '../ui/playlists'
 
 const ADD_BTN_SELECTOR = '.c-add-playlist-form .js-add'
 const CANCEL_BTN_SELECTOR = '.c-add-playlist-form .js-cancel'

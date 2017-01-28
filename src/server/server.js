@@ -108,6 +108,7 @@ var serveHTML = function(path, response) {
 
 var serveRedirect = function(location, reponse) {
     response.setHeader('Location', '/playlists');
+    response.setHeader('Cache-Control', 'max-age=1800');
     endResponse(response, status.MOVED_PERMANENTLY);
 };
 
@@ -139,7 +140,7 @@ var servePOST = function(request, response) {
 // coming into localhost:3000.
 var server = http.createServer(function(request, response) {
     if ( port === 3000) {
-        console.log('******\n' + request.method + ' ' + request.url + '******\n')
+        console.log('\n******\n' + request.method + ' ' + request.url + '\n******\n')
     }
     switch (request.method) {
         case 'GET':
