@@ -15,7 +15,7 @@ A music player created as part of a series of exercises for a course in Web Info
 
 ## Getting Started
 
-# Requirements
+### Requirements
 
 In order to compile the files to obtain distribution-ready `.css` and `.js` files, you need a few things:
 
@@ -23,7 +23,7 @@ In order to compile the files to obtain distribution-ready `.css` and `.js` file
 1. NPM 3.X.X
 1. Sass
 
-# Running
+### Running
 
 If you want to run the app, then execute the following command in your terminal at at the project ROOT:
 ```
@@ -32,7 +32,7 @@ npm install && npm install-dep && node db.js && npm run build && npm start
 
 Head over to your browser and open up `localhost:3000` to view the app.
 
-# Developing
+### Developing
 
 You can enable hot loading style changes with the following command:
 ```
