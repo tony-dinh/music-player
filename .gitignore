@@ -4,6 +4,7 @@
 src/app/js/vendor
 src/client/music-app.js
 src/client/style.css
+src/server/storage/music.db
 
 ### Node ###
 # Logs

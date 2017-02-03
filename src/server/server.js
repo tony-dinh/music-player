@@ -1,7 +1,9 @@
 var fs = require('fs');
+var express = require('express');
 var http = require('http');
 var port = process.env.PORT || 3000;
 
+var STORAGE = require('./storage/utils');
 var CLIENT_DIR = __dirname + '/../client';
 var SERVER_DIR = __dirname;
 var VENDOR_DIR = __dirname + '/../app/js/vendor';
@@ -52,14 +54,23 @@ var writePlaylistData = function(request, response) {
     });
 };
 
-var serveJsonAPI = function(path, response) {
+var serveAPI = function(path, response) {
     response.setHeader('Content-Type', 'application/json');
-    fs.readFile(path, function(err, data) {
-        if (err) {
-            return endResponse(response, status.NOT_FOUND);
-        }
-        endResponse(response, status.OK, data);
-    });
+    var keyMatches = path.match(/^\/api\/(songs|playlists)$/);
+    var key = keyMatches
+        ? keyMatches[1]
+        : null;
+    if (!key) {
+        endResponse(response.INTERNAL_ERROR);
+    }
+    STORAGE.get(key)
+        .then(function(data) {
+            endResponse(response, status.OK, JSON.stringify(data));
+        })
+        .catch(function(err) {
+            console.log(err);
+            endResponse(response, status.INTERNAL_ERROR);
+        });
 };
 
 var serveAsset = function(path, response) {
@@ -106,7 +117,7 @@ var serveHTML = function(path, response) {
     });
 };
 
-var serveRedirect = function(location, reponse) {
+var serveRedirect = function(location, response) {
     response.setHeader('Location', '/playlists');
     response.setHeader('Cache-Control', 'max-age=1800');
     endResponse(response, status.MOVED_PERMANENTLY);
@@ -114,7 +125,7 @@ var serveRedirect = function(location, reponse) {
 
 var serveGET = function(url, response) {
     // APIs
-    if (/^\/api\/.*/.test(url)) { serveJsonAPI(SERVER_DIR + url + '.json', response); }
+    if (/^\/api\/(songs|playlists)$/.test(url)) { serveAPI(url, response); }
     // Assets
     else if (/^\/assets\/.*\.jpg$/.test(url)) { serveAsset(CLIENT_DIR + url, response); }
     // Client JS
