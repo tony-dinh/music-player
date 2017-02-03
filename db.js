@@ -1,10 +1,12 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(__dirname + '/music.db');
+var db = new sqlite3.Database(__dirname + '/src/server/storage/music.db');
 var fs = require('fs');
+
+var SERVER_DIR = __dirname + '/src/server/';
 
 var bulkInsertSongs = function() {
     return new Promise(function(resolve, reject) {
-        fs.readFile(__dirname + '/../data/songs.json', function(err, data) {
+        fs.readFile(`${SERVER_DIR}/data/songs.json`, function(err, data) {
             if (err) {
                 reject(err);
             }
@@ -32,7 +34,7 @@ var bulkInsertSongs = function() {
 
 var bulkInsertPlaylists = function() {
     return new Promise(function(resolve, reject) {
-        fs.readFile(__dirname + '/../data/playlists.json', function(err, data) {
+        fs.readFile(`${SERVER_DIR}/data/playlists.json`, function(err, data) {
             if (err) {
                 reject(err);
             }

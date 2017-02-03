@@ -20,6 +20,7 @@ Storage.get = function(key) {
             data[key].push(row);
         }, function(err) {
             if (err) {
+                db.close();
                 reject(err);
             }
             db.close();
