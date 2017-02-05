@@ -4,7 +4,11 @@ var port = process.env.PORT || 3000;
 var app = express();
 
 var STORAGE = require('./storage/utils');
-var CLIENT_DIR = __dirname + '/../client';
+var CLIENT_DIR = `${__dirname}/../client`;
+
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
 
 var status = {
     OK: 200,
@@ -25,7 +29,7 @@ var sendFile = function(rootDir, relPath, response) {
     response.sendFile(relPath, options, function(err) {
         if (err) {
             console.log(err);
-            response.sendStatus(status.INTERNAL_ERROR);
+            response.sendStatus(err.status);
         }
     });
 };
@@ -43,7 +47,7 @@ app.use(function(request, response, next) {
 
 // APIs
 app.get('/api/:searchKey(songs|playlists)', function(request, response) {
-    STORAGE.get(request.params.searchKey)
+    STORAGE.get(request.params.searchKey.capitalizeFirstLetter())
         .then(function(data) {
             response.status(status.OK).json(data);
         })
@@ -75,7 +79,7 @@ app.get('/:filename(music-app.js|style.css)', function(request, response) {
 
 // Vendor
 app.get(/\/vendor\/.*\.js/, function(request, response) {
-    sendFile(CLIENT_DIR + '/..', request.url, response);
+    sendFile(`${CLIENT_DIR}/..`, request.url, response);
 });
 
 // POST
@@ -90,5 +94,5 @@ app.listen(port, function(err) {
     if (err) {
         return console.log(err);
     }
-    console.log('[ OK ] Music App is listening on port: ' + port + ' 👂 🎵');
+    console.log(`[ OK ] Music App is listening on port: ${port} 👂 🎵`);
 });

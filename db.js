@@ -1,8 +1,8 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(__dirname + '/src/server/storage/music.db');
+var db = new sqlite3.Database(`${__dirname}/src/server/storage/music.db`);
 var fs = require('fs');
 
-var SERVER_DIR = __dirname + '/src/server/';
+var SERVER_DIR = `${__dirname}/src/server/`;
 
 var bulkInsertSongs = function() {
     return new Promise(function(resolve, reject) {
@@ -15,12 +15,13 @@ var bulkInsertSongs = function() {
             db.serialize(function() {
                 db
                 .run('BEGIN TRANSACTION')
-                .run('DROP TABLE IF EXISTS songs')
-                .run('CREATE TABLE songs ("id" INTEGER PRIMARY KEY, "album" VARCHAR(255), "title" VARCHAR(255), "artist" VARCHAR(255), "duration" INTEGER)');
+                .run('DROP TABLE IF EXISTS Songs')
+                .run('CREATE TABLE Songs ("id" INTEGER PRIMARY KEY, "album" VARCHAR(255), "title" VARCHAR(255), "artist" VARCHAR(255), "duration" INTEGER)');
 
-                var statement = db.prepare('INSERT INTO songs (id, album, title, artist, duration) VALUES (?, ?, ?, ?, ?)');
+                // Insert NULL to auto increment ids
+                var statement = db.prepare('INSERT INTO Songs (id, album, title, artist, duration) VALUES (NULL, ?, ?, ?, ?)');
                 songsArr.forEach(function(song) {
-                    statement.run([song.id, song.album, song.title, song.artist, song.duration]);
+                    statement.run([song.album, song.title, song.artist, song.duration]);
                 });
                 statement.finalize();
 
@@ -43,17 +44,18 @@ var bulkInsertPlaylists = function() {
             db.serialize(function() {
                 db
                 .run('BEGIN TRANSACTION')
-                .run('DROP TABLE IF EXISTS playlists')
-                .run('DROP TABLE IF EXISTS songs_playlists')
-                .run('CREATE TABLE playlists ("id" INTEGER PRIMARY KEY, "name" VARCHAR(255))')
-                .run('CREATE TABLE songs_playlists ("id" INTEGER PRIMARY KEY, "playlist_id" INTEGER, "song_id" INTEGER, FOREIGN KEY(playlist_id) REFERENCES playlists(id), FOREIGN KEY(song_id) REFERENCES songs(id))');
+                .run('DROP TABLE IF EXISTS Playlists')
+                .run('DROP TABLE IF EXISTS Songs_Playlists')
+                .run('CREATE TABLE Playlists ("id" INTEGER PRIMARY KEY, "name" VARCHAR(255))')
+                .run('CREATE TABLE Songs_Playlists ("id" INTEGER PRIMARY KEY, "playlist_id" INTEGER, "song_id" INTEGER, FOREIGN KEY(playlist_id) REFERENCES Playlists(id), FOREIGN KEY(song_id) REFERENCES Songs(id))');
 
-                var playlistStatement = db.prepare('INSERT INTO playlists (id, name) VALUES (?, ?)')
-                var songsPlaylistStatement = db.prepare('INSERT INTO songs_playlists (id, playlist_id, song_id) VALUES (NULL, ?, ?)')
+                // Insert NULL to auto increment ids
+                var playlistStatement = db.prepare('INSERT INTO Playlists (id, name) VALUES (NULL, ?)');
+                var songsPlaylistStatement = db.prepare('INSERT INTO Songs_Playlists (id, playlist_id, song_id) VALUES (NULL, ?, ?)');
                 playlistArr.forEach(function(playlist) {
-                    playlistStatement.run([playlist.id, playlist.name]);
+                    playlistStatement.run([playlist.name]);
                     playlist.songs.forEach(function(songId) {
-                        songsPlaylistStatement.run([playlist.id, songId]);
+                        songsPlaylistStatement.run([playlist.id + 1, songId + 1]);
                     });
                 });
                 playlistStatement.finalize();

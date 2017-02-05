@@ -5,19 +5,20 @@ var Storage = {}
 Storage.get = function(key) {
     return new Promise(function(resolve, reject) {
         var db = new sqlite3.Database(__dirname + '/music.db');
-        var isPlaylistsQuery = key === 'playlists';
+        var isPlaylistsQuery = key === 'Playlists';
         var queryString = isPlaylistsQuery
-            ? `SELECT p.id AS id, name, sp.song_id AS songId FROM ${key} as p, songs_playlists as sp WHERE p.id=sp.playlist_id`
+            ? `SELECT p.id AS id, name, sp.song_id AS songId FROM ${key} as p, Songs_Playlists as sp WHERE p.id=sp.playlist_id`
             : `SELECT * FROM ${key}`;
 
+        var dataKey = key.toLowerCase();
         var data = {};
-        data[key] = [];
+        data[dataKey] = [];
 
         db.each(queryString, function(err, row) {
             if (err) {
                 reject(err);
             }
-            data[key].push(row);
+            data[dataKey].push(row);
         }, function(err) {
             if (err) {
                 db.close();
@@ -28,7 +29,7 @@ Storage.get = function(key) {
                 var playlistData = {
                     playlists:[]
                 };
-                data[key].forEach(function(playlist) {
+                data[dataKey].forEach(function(playlist) {
                     var lastPlaylist = playlistData.playlists[playlistData.playlists.length - 1];
                     if (lastPlaylist && lastPlaylist.id === playlist.id) {
                         lastPlaylist.songs.push(playlist.songId);

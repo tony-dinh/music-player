@@ -25,7 +25,7 @@ In order to compile the files to obtain distribution-ready `.css` and `.js` file
 
 ### Running
 
-If you want to run the app, then execute the following command in your terminal at at the project ROOT:
+If you want to run the app, then execute the following command in your terminal at the project ROOT:
 ```
 npm install && npm install-dep && node db.js && npm run build && npm start
 ```
