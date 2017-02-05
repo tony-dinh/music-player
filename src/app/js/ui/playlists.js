@@ -60,4 +60,3 @@ const PlaylistsUI = function() {
 }
 
 export default PlaylistsUI
-export {Playlists, PlaylistsUI}
