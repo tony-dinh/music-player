@@ -3,12 +3,8 @@ var express = require('express');
 var port = process.env.PORT || 3000;
 var app = express();
 
-var STORAGE = require('./storage/utils');
+var STORAGE = require('../storage/utils');
 var CLIENT_DIR = `${__dirname}/../client`;
-
-String.prototype.capitalizeFirstLetter = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
 
 var status = {
     OK: 200,
@@ -25,7 +21,6 @@ var sendFile = function(rootDir, relPath, response) {
             'Cache-Control': 'max-age=1800'
         }
     };
-
     response.sendFile(relPath, options, function(err) {
         if (err) {
             console.log(err);
@@ -47,14 +42,16 @@ app.use(function(request, response, next) {
 
 // APIs
 app.get('/api/:searchKey(songs|playlists)', function(request, response) {
-    STORAGE.get(request.params.searchKey.capitalizeFirstLetter())
-        .then(function(data) {
-            response.status(status.OK).json(data);
-        })
-        .catch(function(err) {
-            console.log(err);
-            response.sendStatus(status.INTERNAL_ERROR);
-        });
+    var successHandler = function(data) {
+        response.status(status.OK).json(data);
+    };
+    var rejectHandler = function(err) {
+        console.log(err);
+        response.sendStatus(status.INTERNAL_ERROR);
+    };
+    STORAGE.get(request.params.searchKey)
+        .then(successHandler)
+        .catch(rejectHandler);
 });
 
 // Assets
@@ -90,9 +87,11 @@ app.post('/api/:searchKey(songs|playlists)', function(request, response) {
 });
 
 // Start the server on port 3000
-app.listen(port, function(err) {
-    if (err) {
-        return console.log(err);
-    }
-    console.log(`[ OK ] Music App is listening on port: ${port} 👂 🎵`);
+STORAGE.sync().then(function() {
+    app.listen(port, function(err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log(`[ OK ] Music App is listening on port: ${port} 👂 🎵`);
+    });
 });
