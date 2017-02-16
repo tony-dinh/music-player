@@ -22,18 +22,18 @@ In order to compile the files to obtain distribution-ready `.css` and `.js` file
 
 1. Node 6.X.X
 1. NPM 3.X.X
-1. Sass
+1. [Sass](http://sass-lang.com/install)
 
 ### Running
 
-If you want to run the app, then execute the following command in your terminal at the project ROOT:
+If you are running the app for the first time and the client `.css` and `.js` files have not been built yet, you may be required to run:
 ```
-npm install && node populateDb.js && npm start
+npm install && npm run install-dep && npm run build && node populateDb.js
 ```
 
-If you are running the app for the first time, and the distribution files `.css` and `.js` files have not been built yet, you may be required to run:
+To run the app, execute the following command in your terminal at the project ROOT:
 ```
-npm install-dep && npm run build
+npm start
 ```
 
 Head over to your browser and open up `localhost:3000` to view the app.
