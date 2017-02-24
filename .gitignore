@@ -1,10 +1,10 @@
 
 # Created by https://www.gitignore.io/api/node,sass
 .DS_Store
-src/app/js/vendor
-src/client/music-app.js
-src/client/style.css
-src/storage/music.db
+*/src/app/js/vendor
+*/src/client/music-app.js
+*/src/client/style.css
+*/src/storage/music.db
 
 ### Node ###
 # Logs
@@ -60,3 +60,6 @@ jspm_packages
 *.css.map
 
 # End of https://www.gitignore.io/api/node,sass
+
+### Vagrant ###
+.vagrant
