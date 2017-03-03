@@ -63,4 +63,22 @@ Storage.getSongsForPlaylistInstance = function(playlistInstance) {
         });
 };
 
+Storage.addSongToPlaylist = function(playlistId, songId) {
+    return models.Playlist.findById(playlistId)
+        .then(function(playlistInstance) {
+            return playlistInstance.addSong(songId)
+        });
+};
+
+Storage.addNewPlaylist = function(playlist) {
+    return models.Playlist.create(playlist, {fields: ['name']})
+};
+
+Storage.deleteSongFromPlaylist = function(playlistId, songId) {
+    return models.Playlist.findById(playlistId)
+        .then(function(playlistInstance) {
+            return playlistInstance.removeSong(songId);
+        });
+};
+
 module.exports = Storage;

@@ -55,6 +55,10 @@
     color: $primary-color;
 }
 
+#playlist-song-list .c-remove-from-playlist {
+    display: inherit !important;
+}
+
 @media (min-width : 768px) {
     .c-playlist__item {
     }

@@ -1,4 +1,5 @@
 import Events from '../global/events'
+import Request from '../global/request'
 
 import { NavBar } from '../components/nav-bar'
 import { AddPlaylistForm, AddPlaylistFormUI } from '../components/add-playlist-form'
@@ -48,7 +49,23 @@ const _bindEvents = function() {
         AddPlaylistForm.show()
     })
 
-    $body.on(Events.names.ADD_PLAYLIST, function(e, playlistObj) {
+    $body.on('click', '#playlist-song-list .js-remove-from-playlist', function(e) {
+        const $songEl = $(this).closest('.c-library__item')
+        const songId = $songEl.data('id')
+        const playlistId = $('#playlist-details').data('playlist-id')
+
+        Request.removeSongFromPlaylist(songId, playlistId)
+            .then(function() {
+                const playlistObj = UTILS.getObjWithId(PLAYLISTS, playlistId)
+                UTILS.removeSongFromPlaylist(songId, playlistObj)
+                $songEl.remove()
+            })
+            .catch(function(err) {
+                console.log(err)
+            })
+    })
+
+    $body.on(Events.names.PLAYLIST_ADDED, function(e, playlistObj) {
         Playlists.add(playlistObj)
     })
 }

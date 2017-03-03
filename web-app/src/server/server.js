@@ -29,6 +29,26 @@ var sendFile = function(rootDir, relPath, response) {
     });
 };
 
+var isJSON = function(string) {
+    try {
+        JSON.parse(string);
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
+
+var onRequestEnd = function(request, callback) {
+    var body = '';
+    request.on('data', function(data) {
+        body += data;
+    });
+
+    request.on('end', function() {
+        callback(body);
+    });
+}
+
 // MIDDLEWARE
 // ---
 
@@ -81,9 +101,68 @@ app.get(/\/vendor\/.*\.js/, function(request, response) {
 
 // POST
 // ---
-app.post('/api/:searchKey(songs|playlists)', function(request, response) {
-    // Future Task
-    response.sendStatus(status.INTERNAL_ERROR);
+app.post('/api/playlists', function(request, response) {
+    onRequestEnd(request, function(body) {
+        if (!isJSON(body)) {
+            return response.sendStatus(status.BAD_REQUEST);
+        }
+
+        var playlistData = JSON.parse(body);
+        if (typeof playlistData.name !== 'string') {
+            return response.sendStatus(status.BAD_REQUEST);
+        }
+
+        STORAGE.addNewPlaylist(playlistData)
+            .then(function(playlistInstance) {
+                var playlist = {
+                    id: playlistInstance.id,
+                    name: playlistData.name
+                };
+                response.json(playlist);
+            })
+            .catch(function(err) {
+                console.log(err.message);
+                response.sendStatus(status.INTERNAL_ERROR);
+            });
+    });
+});
+
+app.post('/api/playlists/:playlistId([0-9]+)', function(request, response) {
+    onRequestEnd(request, function(body) {
+        if (!isJSON(body)) {
+            return response.sendStatus(status.BAD_REQUEST);
+        }
+
+        var playlistData = JSON.parse(body);
+        STORAGE.addSongToPlaylist(request.params.playlistId, parseInt(playlistData.song))
+            .then(function() {
+                response.sendStatus(status.OK);
+            })
+            .catch(function(err) {
+                console.log(err.message);
+                response.sendStatus(status.INTERNAL_ERROR);
+            });
+    });
+});
+
+// DELETE
+// ---
+app.delete('/playlists/:playlistId([0-9]+)', function(request, response) {
+    onRequestEnd(request, function(body) {
+        if (!isJSON(body)) {
+            return response.sendStatus(status.BAD_REQUEST);
+        }
+
+        var playlistData = JSON.parse(body);
+        STORAGE.deleteSongFromPlaylist(request.params.playlistId, parseInt(playlistData.song))
+            .then(function() {
+                response.sendStatus(status.OK);
+            })
+            .catch(function(err) {
+                console.log(err.message);
+                response.sendStatus(status.INTERNAL_ERROR);
+            });
+    });
 });
 
 // Start the server on port 3000

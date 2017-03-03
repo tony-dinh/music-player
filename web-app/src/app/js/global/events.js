@@ -1,7 +1,7 @@
 const Events = {}
 
 Events.names = {
-    ADD_PLAYLIST: 'playlist:add'
+    PLAYLIST_ADDED: '@@playlist/ADDED'
 }
 
 export default Events

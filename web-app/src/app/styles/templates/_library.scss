@@ -55,6 +55,10 @@
     color: $grey-50;
 }
 
+#library .c-remove-from-playlist {
+    display: none !important;
+}
+
 @media (min-width : 768px) {
     .c-library__item {
     }
