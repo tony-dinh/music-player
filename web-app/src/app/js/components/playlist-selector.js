@@ -52,13 +52,19 @@ const _bindEvents = function() {
         const selectedPlaylistId = $(this).data('id')
         const playlistObj = UTILS.getObjWithId(PLAYLISTS, selectedPlaylistId)
 
-        if (UTILS.addSongToPlaylist(selectedSongId, playlistObj)) {
-            Request.postPlaylistData()
+        if (!playlistObj.songs.includes(parseInt(selectedSongId))) {
+            Request.addSongToPlaylist(selectedSongId, selectedPlaylistId)
+                .then(function() {
+                    UTILS.addSongToPlaylist(selectedSongId, playlistObj)
+                })
+                .catch(function(err) {
+                    console.log(err)
+                })
         }
         PlaylistSelector.hide()
     })
 
-    $body.on(Events.names.ADD_PLAYLIST, function(e, playlistObj) {
+    $body.on(Events.names.PLAYLIST_ADDED, function(e, playlistObj) {
         PlaylistSelector.addPlaylist(playlistObj)
     })
 }

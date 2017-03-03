@@ -36,23 +36,25 @@ const _bindEvents = function() {
         // Prevent default form submission
         e.preventDefault()
 
-        const playlistObj = {
-            'id': PLAYLISTS.length,
-            'name': $nameInput.val(),
-            'songs': []
+        const playlist = {
+            'name': $nameInput.val()
         }
-        $('body').trigger(Events.names.ADD_PLAYLIST, playlistObj)
-        dismissFormHandler(e)
+
+        Request
+            .addNewPlaylist(playlist)
+            .then(function(playlistObj) {
+                PLAYLISTS.push(playlistObj)
+                $('body').trigger(Events.names.PLAYLIST_ADDED, playlistObj)
+                dismissFormHandler(e)
+            })
+            .catch(function(err) {
+                console.log(err)
+            })
     }
+
     $(FORM_SELECTOR).on('submit', formSubmissionHandler)
     $(CANCEL_BTN_SELECTOR).on('click', dismissFormHandler)
     $(ADD_BTN_SELECTOR).on('click', formSubmissionHandler)
-
-    // We want to post playlist data whenever a playlist is added
-    $('body').on(Events.names.ADD_PLAYLIST, function(e, playlistObj) {
-        PLAYLISTS.push(playlistObj)
-        Request.postPlaylistData()
-    })
 }
 
 const AddPlaylistFormUI = function() {
