@@ -50,4 +50,25 @@ Request.removeSongFromPlaylist = async function(songId, playlistId) {
     })
 }
 
+Request.submitLogin = async function(data) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/login',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify(data),
+            success: (data, status, xhr) => {
+                if (xhr.status !== 200) {
+                    reject(`[ Request ] Login Failed`)
+                }
+                resolve(data)
+            },
+            error: () => {
+                reject(`[ Request ] Login Failed`)
+            }
+
+        })
+    })
+}
+
 export default Request

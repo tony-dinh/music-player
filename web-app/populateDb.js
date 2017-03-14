@@ -5,7 +5,7 @@ var fs = require('fs');
 var models = require(`${STORAGE_DIR}/models`);
 
 var populateSongs = function() {
-    return new Promise (function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
         fs.readFile(`${DATA_DIR}/songs.json`, function(err, data) {
             if (err) {
                 reject(err);
@@ -22,7 +22,7 @@ var populateSongs = function() {
 };
 
 var populatePlaylists = function() {
-    return new Promise (function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
         fs.readFile(`${DATA_DIR}/playlists.json`, function(err, data) {
             if (err) {
                 reject(err);
@@ -45,9 +45,35 @@ var populatePlaylists = function() {
     });
 };
 
+var populateUsers = function() {
+    return new Promise(function(resolve, reject) {
+        fs.readFile(`${DATA_DIR}/users.json`, function(err, data) {
+            if (err) {
+                reject(err);
+            }
+
+            var promiseArr = [];
+            var userData = JSON.parse(data);
+            var users = userData.users;
+
+            users.forEach(function(user) {
+                var associatePromise = models.User.create(user, {fields:['username', 'password']})
+                    .then(function(userInstance) {
+                        return userInstance.setPlaylists(user.playlists);
+                    })
+                    .catch(reject);
+                promiseArr.push(associatePromise);
+            });
+            // Wait for all association promises to resolve
+            Promise.all(promiseArr).then(resolve);
+        });
+    });
+};
+
 models.sequelize.sync({force: true}).then(function() {
     populateSongs()
         .then(populatePlaylists)
+        .then(populateUsers)
         .then(function() {
             console.log('[ OK ] Database successfully populated.');
         }, function(err) {

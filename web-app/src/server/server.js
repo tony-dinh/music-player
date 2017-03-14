@@ -1,5 +1,9 @@
 var fs = require('fs');
+var crypto = require('crypto');
 var express = require('express');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+
 var port = process.env.PORT || 3000;
 var app = express();
 
@@ -10,8 +14,15 @@ var status = {
     OK: 200,
     MOVED_PERMANENTLY: 301,
     BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
     NOT_FOUND: 404,
     INTERNAL_ERROR: 500
+};
+
+var generateKey = function() {
+    var sha = crypto.createHash('sha256');
+    sha.update(Math.random().toString());
+    return sha.digest('hex');
 };
 
 var sendFile = function(rootDir, relPath, response) {
@@ -49,9 +60,28 @@ var onRequestEnd = function(request, callback) {
     });
 }
 
+var checkAuthorization = function(request, response, next) {
+    if (request.url === '/login') {
+        next()
+    }
+
+    STORAGE.checkActiveSession({sessionKey: request.cookies.sessionKey})
+        .then(function(session) {
+            if (!session.isActive) {
+                return response.redirect(status.MOVED_PERMANENTLY, '/login');
+            } else {
+                if (request.url === '/') {
+                    return response.redirect(status.MOVED_PERMANENTLY, '/playlists')
+                }
+                next()
+            }
+        });
+};
+
 // MIDDLEWARE
 // ---
 
+app.use(cookieParser());
 app.use(function(request, response, next) {
     console.log(`\n[ ${request.method} ] ${request.url}\n`);
     next();
@@ -80,12 +110,10 @@ app.get(/^\/assets\/[^\/]*\.jpg$/, function(request, response) {
 });
 
 // Redirect
-app.get('/', function(request, response) {
-    response.redirect(status.MOVED_PERMANENTLY, '/playlists');
-});
+app.get('/', checkAuthorization);
 
 // HTML
-app.get(/^\/(playlists|library|search)$/, function(request, response) {
+app.get(/^\/(login|playlists|library|search)$/, checkAuthorization,function(request, response) {
     sendFile(CLIENT_DIR, 'index.html', response);
 });
 
@@ -143,6 +171,28 @@ app.post('/api/playlists/:playlistId([0-9]+)', function(request, response) {
                 response.sendStatus(status.INTERNAL_ERROR);
             });
     });
+});
+
+app.post('/login', bodyParser.json(), function(request, response) {
+    if (!request.body.username || !request.body.password) {
+        return response.sendStatus(status.UNAUTHORIZED);
+    }
+
+    STORAGE.checkValidLogin({
+        username: request.body.username,
+        password: request.body.password
+    }).then(function(user) {
+        if (user.isValid) {
+            const sessionKey = generateKey();
+            STORAGE.addSession({sessionKey: sessionKey, sessionUser: user.id})
+                .then(function() {
+                    response.setHeader('Set-Cookie', `sessionKey=${sessionKey}`)
+                    response.redirect(status.MOVED_PERMANENTLY, '/playlists')
+                })
+        } else {
+            response.sendStatus(status.UNAUTHORIZED)
+        }
+    })
 });
 
 // DELETE

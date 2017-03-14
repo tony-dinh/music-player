@@ -9,100 +9,109 @@
         <script src="../app/js/vendor/jquery.min.js"></script>
     </head>
     <body>
-        <header>
-            <nav>
-                <!-- Tab Items -->
-                <ul class="c-nav-bar__tab-container">
-                    <li data-tab="library" class="c-nav-bar__tab">
-                        <a href="#">
-                            <div class="c-nav-bar__tab-icon glyphicon glyphicon-music"></div>
-                            <h5 class="c-nav-bar__tab-label">Library</h5>
-                        </a>
-                    </li>
-                    <li data-tab="playlists" class="c-nav-bar__tab">
-                        <a href="#">
-                            <div class="c-nav-bar__tab-icon glyphicon glyphicon-list"></div>
-                            <div class="c-nav-bar__tab-icon glyphicon glyphicon-th"></div>
-                            <h5 class="c-nav-bar__tab-label">Playlists</h5>
-                        </a>
-                    </li>
-                    <li data-tab="search" class="c-nav-bar__tab">
-                        <a href="#">
-                            <div class="c-nav-bar__tab-icon glyphicon glyphicon-search"></div>
-                            <h5 class="c-nav-bar__tab-label">Search</h5>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
-
-        <!-- Overlay -->
-        <div class="c-overlay u-flex-row u--center">
-            <div class="js-overlay-modal c-list-selector__container u-hidden">
-                <div class="c-list-selector">
-                    <div class="c-list-selector__header u-flex-row u--center">
-                        <h5 class="u-grow">Choose a Playlist</h5>
-                        <button class="c-list-selector__close-button glyphicon glyphicon-remove" type="button" name="list-selector-close-button"></button>
-                    </div>
-                    <ul id="playlist-list-selector">
+        <div id="login-page" class="t-tab u-flex-col u--center">
+            <form id="login-form" action="">
+                <input placeholder="Username" name="username" class="js-username-input u-margin-medium u-full-width"></input>
+                <input placeholder="Password" name="password" type="password" class="js-password-input u-margin-medium u-full-width"></input>
+                <button class="js-login-button c-button c--primary u-full-width u-margin-medium">Login</button>
+            </form>
+        </div>
+        <div id="playlist-app" hidden>
+            <header>
+                <nav>
+                    <!-- Tab Items -->
+                    <ul class="c-nav-bar__tab-container">
+                        <li data-tab="library" class="c-nav-bar__tab">
+                            <a href="#">
+                                <div class="c-nav-bar__tab-icon glyphicon glyphicon-music"></div>
+                                <h5 class="c-nav-bar__tab-label">Library</h5>
+                            </a>
+                        </li>
+                        <li data-tab="playlists" class="c-nav-bar__tab">
+                            <a href="#">
+                                <div class="c-nav-bar__tab-icon glyphicon glyphicon-list"></div>
+                                <div class="c-nav-bar__tab-icon glyphicon glyphicon-th"></div>
+                                <h5 class="c-nav-bar__tab-label">Playlists</h5>
+                            </a>
+                        </li>
+                        <li data-tab="search" class="c-nav-bar__tab">
+                            <a href="#">
+                                <div class="c-nav-bar__tab-icon glyphicon glyphicon-search"></div>
+                                <h5 class="c-nav-bar__tab-label">Search</h5>
+                            </a>
+                        </li>
                     </ul>
+                </nav>
+            </header>
+
+            <!-- Overlay -->
+            <div class="c-overlay u-flex-row u--center">
+                <div class="js-overlay-modal c-list-selector__container u-hidden">
+                    <div class="c-list-selector">
+                        <div class="c-list-selector__header u-flex-row u--center">
+                            <h5 class="u-grow">Choose a Playlist</h5>
+                            <button class="c-list-selector__close-button glyphicon glyphicon-remove" type="button" name="list-selector-close-button"></button>
+                        </div>
+                        <ul id="playlist-list-selector">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Add Playlist Form -->
+                <div class="js-overlay-modal c-add-playlist-form__container u-hidden">
+                    <form class="c-add-playlist-form">
+                        <div class="c-add-playlist-form__header u-flex-row u--center">
+                            <h5 class="u-grow">Add a Playlist</h5>
+                        </div>
+                        <input autocomplete="off" class="js-playlist-name-input u-margin-v-large u-full-width" type="text" name="playlist-name" placeholder="Playlist Name">
+                        <div class="u-flex-row u--center u-margin-top-large">
+                            <button class="js-cancel c-button c--secondary u-half-width u-margin-right-medium" type="button" name="cancel-button">Cancel</button>
+                            <button class="js-add c-button c--primary u-half-width u-margin-left-medium" type="button" name="add-playlist-button">Add</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <!-- Add Playlist Form -->
-            <div class="js-overlay-modal c-add-playlist-form__container u-hidden">
-                <form class="c-add-playlist-form">
-                    <div class="c-add-playlist-form__header u-flex-row u--center">
-                        <h5 class="u-grow">Add a Playlist</h5>
-                    </div>
-                    <input autocomplete="off" class="js-playlist-name-input u-margin-v-large u-full-width" type="text" name="playlist-name" placeholder="Playlist Name">
-                    <div class="u-flex-row u--center u-margin-top-large">
-                        <button class="js-cancel c-button c--secondary u-half-width u-margin-right-medium" type="button" name="cancel-button">Cancel</button>
-                        <button class="js-add c-button c--primary u-half-width u-margin-left-medium" type="button" name="add-playlist-button">Add</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Library Tab -->
-        <div id="library-tab-content" class="t-tab">
-            <div class="c-button__container u-flex-row u--middle">
-                <button class="js-library-sort-button c-button c--primary c--half-width u-margin-h-large c--active" type="button" data-key="artist" name="sort-by-artist">Sort by Artist</button>
-                <button class="js-library-sort-button c-button c--primary c--half-width u-margin-h-large" data-key='title' type="button" name="sort-by-title">Sort by Title</button>
-            </div>
-            <div id="library" class="c-table-grid"></div>
-        </div>
-
-        <!-- Playlist Tab -->
-        <div id="playlists-tab-content" class="t-tab">
-            <!-- Add to Playlist Button -->
-            <div class="c-button__container u-flex-row u--middle">
-                <button id="playlist-button" class="c-button c--primary u-full-width" type="button" name="add-playlist"><span class="glyphicon glyphicon-plus"></span> Playlist</button>
-            </div>
-            <!-- Playlists  -->
-            <div id="playlists" class="c-table-grid"></div>
-        </div>
-
-        <!-- Playlist Details -->
-        <div id="playlist-details" class="t-tab">
-            <div class="c-playlist-details__heading-container u-padding-large">
-                <h1>Playlist Name</h1>
-            </div>
-            <div id="playlist-song-list" class="c-table-grid"></div>
-        </div>
-
-        <!-- Search Tab -->
-        <div id="search-tab-content" class="t-tab">
-            <div class="c-search-bar__container">
-                <div class="c-search-bar__dopple u-flex-row u--center">
-                    <span class="c-search-bar__icon glyphicon glyphicon-search"></span>
-                    <input id="search-bar" class="c-search-bar" type="text" placeholder="Search">
+            <!-- Library Tab -->
+            <div id="library-tab-content" class="t-tab">
+                <div class="c-button__container u-flex-row u--middle">
+                    <button class="js-library-sort-button c-button c--primary c--half-width u-margin-h-large c--active" type="button" data-key="artist" name="sort-by-artist">Sort by Artist</button>
+                    <button class="js-library-sort-button c-button c--primary c--half-width u-margin-h-large" data-key='title' type="button" name="sort-by-title">Sort by Title</button>
                 </div>
+                <div id="library" class="c-table-grid"></div>
             </div>
-            <!-- Search Results -->
-            <div id="search-results" class="">
-                <div class="c-search__playlist-results c-table-grid"></div>
-                <div class="c-search__song-results c-table-grid"></div>
+
+            <!-- Playlist Tab -->
+            <div id="playlists-tab-content" class="t-tab">
+                <!-- Add to Playlist Button -->
+                <div class="c-button__container u-flex-row u--middle">
+                    <button id="playlist-button" class="c-button c--primary u-full-width" type="button" name="add-playlist"><span class="glyphicon glyphicon-plus"></span> Playlist</button>
+                </div>
+                <!-- Playlists  -->
+                <div id="playlists" class="c-table-grid"></div>
+            </div>
+
+            <!-- Playlist Details -->
+            <div id="playlist-details" class="t-tab">
+                <div class="c-playlist-details__heading-container u-padding-large">
+                    <h1>Playlist Name</h1>
+                </div>
+                <div id="playlist-song-list" class="c-table-grid"></div>
+            </div>
+
+            <!-- Search Tab -->
+            <div id="search-tab-content" class="t-tab">
+                <div class="c-search-bar__container">
+                    <div class="c-search-bar__dopple u-flex-row u--center">
+                        <span class="c-search-bar__icon glyphicon glyphicon-search"></span>
+                        <input id="search-bar" class="c-search-bar" type="text" placeholder="Search">
+                    </div>
+                </div>
+                <!-- Search Results -->
+                <div id="search-results" class="">
+                    <div class="c-search__playlist-results c-table-grid"></div>
+                    <div class="c-search__song-results c-table-grid"></div>
+                </div>
             </div>
         </div>
         <script src="music-app.js"></script>

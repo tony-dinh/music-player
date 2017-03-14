@@ -66,12 +66,12 @@ Storage.getSongsForPlaylistInstance = function(playlistInstance) {
 Storage.addSongToPlaylist = function(playlistId, songId) {
     return models.Playlist.findById(playlistId)
         .then(function(playlistInstance) {
-            return playlistInstance.addSong(songId)
+            return playlistInstance.addSong(songId);
         });
 };
 
 Storage.addNewPlaylist = function(playlist) {
-    return models.Playlist.create(playlist, {fields: ['name']})
+    return models.Playlist.create(playlist, {fields: ['name']});
 };
 
 Storage.deleteSongFromPlaylist = function(playlistId, songId) {
@@ -79,6 +79,40 @@ Storage.deleteSongFromPlaylist = function(playlistId, songId) {
         .then(function(playlistInstance) {
             return playlistInstance.removeSong(songId);
         });
+};
+
+Storage.checkValidLogin = function(loginInfo) {
+    return models.User.findOne({
+        where: {
+            "username": loginInfo.username
+        }
+    }).then(function(userInstance) {
+        if (!userInstance || userInstance.password !== loginInfo.password) {
+            return {isValid: false}
+        }
+        return {id: userInstance.id, isValid: true}
+    });
+};
+
+Storage.checkActiveSession = function(session) {
+    return new Promise(function(resolve, reject) {
+        models.Session.findOne({
+            where: {
+                "sessionKey": session.sessionKey
+            }
+        }).then(function(sessionInstance) {
+            const session = {isActive: !!sessionInstance};
+            session.sessionUser = sessionInstance
+                ? sessionInstance.sessionUser
+                : null;
+
+            resolve(session);
+        });
+    });
+};
+
+Storage.addSession = function(session) {
+    return models.Session.create(session);
 };
 
 module.exports = Storage;
