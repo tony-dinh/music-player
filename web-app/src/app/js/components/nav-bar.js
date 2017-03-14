@@ -10,14 +10,16 @@ NavBar.setTabViewActive = function($tabView) {
     $tabView.addClass(activeClass)
 }
 
-NavBar.setTabActive = function($tab) {
-    const activeClass = 'c--active'
-    const activeTabViewSelector = '#' + $tab.data('tab') + '-tab-content'
+NavBar.setTabActive = function($tab, pushState) {
+    const tab = $tab.data('tab')
+    const activeTabViewSelector = `#${tab}-tab-content`
 
-    $('.c-nav-bar__tab').removeClass(activeClass)
-    $tab.addClass(activeClass)
-
+    _highlightTab($tab)
     NavBar.setTabViewActive($(activeTabViewSelector))
+
+    if (pushState) {
+        history.pushState({'tab': tab}, tab, '/' + tab)
+    }
 }
 
 const _bindEvents = function() {
@@ -26,13 +28,17 @@ const _bindEvents = function() {
         Overlay.hide()
 
         const $selectedTab = $(this)
-        const tab = $selectedTab.data('tab')
-        NavBar.setTabActive($selectedTab)
-
-        if (document.origin !== "null") {
-            history.pushState({'tab': tab}, tab, '/' + tab)
-        }
+        NavBar.setTabActive($selectedTab, true)
     })
+}
+
+const _highlightTab = function($tab) {
+    const activeClass = 'c--active'
+    const tab = $tab.data('tab')
+    const activeTabViewSelector = `#${tab}-tab-content`
+
+    $('.c-nav-bar__tab').removeClass(activeClass)
+    $tab.addClass(activeClass)
 }
 
 const _selectInitialTab = function() {

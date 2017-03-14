@@ -13,7 +13,6 @@ module.exports = function(sequelize, DataType) {
                 });
             }
         }
-    }
-);
+    });
     return Session;
 };

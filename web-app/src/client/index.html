@@ -9,33 +9,33 @@
         <script src="../app/js/vendor/jquery.min.js"></script>
     </head>
     <body>
-        <div id="login-page" class="t-tab u-flex-col u--center">
+        <div id="login-page" class="t-tab u-flex-col u--center u-hidden">
             <form id="login-form" action="">
                 <input placeholder="Username" name="username" class="js-username-input u-margin-medium u-full-width"></input>
                 <input placeholder="Password" name="password" type="password" class="js-password-input u-margin-medium u-full-width"></input>
                 <button class="js-login-button c-button c--primary u-full-width u-margin-medium">Login</button>
             </form>
         </div>
-        <div id="playlist-app" hidden>
+        <div id="playlist-app" class="u-hidden">
             <header>
                 <nav>
                     <!-- Tab Items -->
                     <ul class="c-nav-bar__tab-container">
                         <li data-tab="library" class="c-nav-bar__tab">
-                            <a href="#">
+                            <a>
                                 <div class="c-nav-bar__tab-icon glyphicon glyphicon-music"></div>
                                 <h5 class="c-nav-bar__tab-label">Library</h5>
                             </a>
                         </li>
                         <li data-tab="playlists" class="c-nav-bar__tab">
-                            <a href="#">
+                            <a>
                                 <div class="c-nav-bar__tab-icon glyphicon glyphicon-list"></div>
                                 <div class="c-nav-bar__tab-icon glyphicon glyphicon-th"></div>
                                 <h5 class="c-nav-bar__tab-label">Playlists</h5>
                             </a>
                         </li>
                         <li data-tab="search" class="c-nav-bar__tab">
-                            <a href="#">
+                            <a>
                                 <div class="c-nav-bar__tab-icon glyphicon glyphicon-search"></div>
                                 <h5 class="c-nav-bar__tab-label">Search</h5>
                             </a>

@@ -62,18 +62,21 @@ var onRequestEnd = function(request, callback) {
 
 var checkAuthorization = function(request, response, next) {
     if (request.url === '/login') {
-        next()
+        console.log('attempting to go to login')
+        return next();
     }
-
     STORAGE.checkActiveSession({sessionKey: request.cookies.sessionKey})
         .then(function(session) {
+            console.log('checking sessions', session)
             if (!session.isActive) {
                 return response.redirect(status.MOVED_PERMANENTLY, '/login');
             } else {
+                // response.sessionUser = session.sessionUser;
                 if (request.url === '/') {
-                    return response.redirect(status.MOVED_PERMANENTLY, '/playlists')
+                    return response.redirect(status.MOVED_PERMANENTLY, '/playlists');
+                } else {
+                    return next();
                 }
-                next()
             }
         });
 };

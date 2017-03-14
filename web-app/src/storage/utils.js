@@ -95,6 +95,10 @@ Storage.checkValidLogin = function(loginInfo) {
 };
 
 Storage.checkActiveSession = function(session) {
+    if (!session.sessionKey) {
+        return Promise.resolve({isActive: false});
+    }
+
     return new Promise(function(resolve, reject) {
         models.Session.findOne({
             where: {
