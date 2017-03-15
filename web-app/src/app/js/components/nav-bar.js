@@ -1,5 +1,4 @@
 import Overlay from './overlay'
-import { PlaylistSelectorUI } from './playlist-selector'
 
 const NavBar = {}
 
@@ -56,7 +55,6 @@ const _selectInitialTab = function() {
 }
 
 const NavBarUI = function() {
-    PlaylistSelectorUI()
     _bindEvents()
     _selectInitialTab()
 }

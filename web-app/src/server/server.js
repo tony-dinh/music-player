@@ -62,16 +62,18 @@ var onRequestEnd = function(request, callback) {
 
 var checkAuthorization = function(request, response, next) {
     if (request.url === '/login') {
-        console.log('attempting to go to login')
         return next();
     }
     STORAGE.checkActiveSession({sessionKey: request.cookies.sessionKey})
         .then(function(session) {
-            console.log('checking sessions', session)
             if (!session.isActive) {
-                return response.redirect(status.MOVED_PERMANENTLY, '/login');
+                if (/^\/api/.test(request.url)) {
+                    next()
+                } else {
+                    return response.redirect(status.MOVED_PERMANENTLY, '/login');
+                }
             } else {
-                // response.sessionUser = session.sessionUser;
+                request.sessionUser = session.sessionUser;
                 if (request.url === '/') {
                     return response.redirect(status.MOVED_PERMANENTLY, '/playlists');
                 } else {
@@ -94,7 +96,7 @@ app.use(function(request, response, next) {
 // ---
 
 // APIs
-app.get('/api/:searchKey(songs|playlists)', function(request, response) {
+app.get('/api/:searchKey(songs|playlists)', checkAuthorization, function(request, response) {
     var successHandler = function(data) {
         response.status(status.OK).json(data);
     };
@@ -102,7 +104,7 @@ app.get('/api/:searchKey(songs|playlists)', function(request, response) {
         console.log(err);
         response.sendStatus(status.INTERNAL_ERROR);
     };
-    STORAGE.get(request.params.searchKey)
+    STORAGE.get(request.params.searchKey, request.sessionUser)
         .then(successHandler)
         .catch(rejectHandler);
 });
@@ -190,7 +192,7 @@ app.post('/login', bodyParser.json(), function(request, response) {
             STORAGE.addSession({sessionKey: sessionKey, sessionUser: user.id})
                 .then(function() {
                     response.setHeader('Set-Cookie', `sessionKey=${sessionKey}`)
-                    response.redirect(status.MOVED_PERMANENTLY, '/playlists')
+                    response.sendStatus(status.OK)
                 })
         } else {
             response.sendStatus(status.UNAUTHORIZED)

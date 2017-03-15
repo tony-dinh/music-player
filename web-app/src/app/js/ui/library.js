@@ -1,4 +1,5 @@
 import { PlaylistSelector } from '../components/playlist-selector'
+import Events from '../global/events'
 
 const TITLE_SORT_KEY = 'title'
 const ARTIST_SORT_KEY = 'artist'
@@ -43,8 +44,9 @@ const _loadSongsSortedBy = function(sortKey) {
 
 const _bindEvents = function() {
     const activeClass = 'c--active'
+    const $body = $('body')
 
-    $('body').on('click', '.js-add-to-playlist', function(e) {
+    $body.on('click', '.js-add-to-playlist', function(e) {
         e.stopPropagation()
 
         const $songEl = $(this).closest('.c-library__item')
@@ -61,10 +63,13 @@ const _bindEvents = function() {
 
         _loadSongsSortedBy($selectedBtn.data('key'))
     })
+
+    $body.on(Events.names.SONGS_UPDATED, function(e) {
+        _loadSongsSortedBy(ARTIST_SORT_KEY)
+    })
 }
 
 const LibraryUI = function() {
-    _loadSongsSortedBy(ARTIST_SORT_KEY)
     _bindEvents()
 }
 

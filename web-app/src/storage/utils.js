@@ -6,11 +6,11 @@ Storage.sync = function() {
     return models.sequelize.sync();
 };
 
-Storage.get = function(key) {
+Storage.get = function(key, userId) {
     if (key === 'songs') {
         return Storage.getSongs();
     } else if (key === 'playlists') {
-        return Storage.getPlaylists();
+        return Storage.getPlaylistsForUser(userId);
     } else {
         return Promise.reject(new Error(`Invalid request: get(${key})`));
     }
@@ -32,12 +32,16 @@ Storage.getSongs = function() {
         });
 };
 
-Storage.getPlaylists = function() {
-    return models.Playlist.findAll()
-        .then(function(playlists) {
-            // Promise an array of playlist objects
+Storage.getPlaylistsForUser = function(userId) {
+    if (!userId) {
+        return Promise.resolve({playlists:[]})
+    }
+
+    return models.User.findById(userId)
+        .then((userInstance) => userInstance.getPlaylists({ attributes: ['id', 'name'] }))
+        .then((userPlaylists) => {
             return Promise.all(
-                playlists.map(function(playlistInstance) {
+                userPlaylists.map((playlistInstance) => {
                     return Storage.getSongsForPlaylistInstance(playlistInstance)
                         .then(function(songIds) {
                             return {
@@ -47,10 +51,10 @@ Storage.getPlaylists = function() {
                             };
                         });
                 })
-            );
+            )
         })
-        .then(function(playlistArr) {
-            return { playlists: playlistArr };
+        .then((playlistArr) => {
+            return {playlists: playlistArr}
         })
 };
 

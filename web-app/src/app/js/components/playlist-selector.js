@@ -67,13 +67,20 @@ const _bindEvents = function() {
     $body.on(Events.names.PLAYLIST_ADDED, function(e, playlistObj) {
         PlaylistSelector.addPlaylist(playlistObj)
     })
+
+    $body.on(Events.names.MUSIC_LOADED, function() {
+        _addPlaylists()
+    })
 }
 
-const PlaylistSelectorUI = function() {
+const _addPlaylists = function() {
     if (!$.isArray(PLAYLISTS) || PLAYLISTS.length === 0) {
         return
     }
     PLAYLISTS.forEach(PlaylistSelector.addPlaylist)
+}
+
+const PlaylistSelectorUI = function() {
     _bindEvents()
 }
 

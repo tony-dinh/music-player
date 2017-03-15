@@ -68,11 +68,12 @@ const _bindEvents = function() {
     $body.on(Events.names.PLAYLIST_ADDED, function(e, playlistObj) {
         Playlists.add(playlistObj)
     })
+
+    $body.on(Events.names.PLAYLISTS_UPDATED, _loadPlaylists)
 }
 
 const PlaylistsUI = function() {
     AddPlaylistFormUI()
-    _loadPlaylists()
     _bindEvents()
 }
 

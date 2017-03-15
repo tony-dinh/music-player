@@ -17,6 +17,7 @@ const _redirectToApp = function() {
 }
 
 const _bindEvents = function() {
+    const $body = $('body')
     const submitFormHandler = function(e) {
         e.preventDefault()
         const loginInfo = {
@@ -24,14 +25,16 @@ const _bindEvents = function() {
             password: $('.js-password-input').val()
         }
         Request.submitLogin(loginInfo)
-            .then((data) => $('body').trigger(Events.names.SIGNED_IN))
-            .catch((err) => console.log(err))
+            .then((data) => {
+                $body.trigger(Events.names.SIGNED_IN)
+                $body.trigger(Events.names.PLAYLISTS_UPDATE_NEEDED)
+            }).catch((err) => console.log(err))
     }
 
     $(LOGIN_FORM_SELECTOR).on('submit', submitFormHandler)
     $(LOGIN_BUTTON_SELECTOR).on('click', submitFormHandler)
 
-    $('body').on(Events.names.SIGNED_IN, _redirectToApp)
+    $body.on(Events.names.SIGNED_IN, _redirectToApp)
 }
 
 const LoginUI = function() {
