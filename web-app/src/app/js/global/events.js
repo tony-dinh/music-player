@@ -3,6 +3,7 @@ const Events = {}
 Events.names = {
     MUSIC_LOADED: '@@music/LOADED',
     PLAYLISTS_UPDATE_NEEDED: '@@playlists/UPDATE_NEEDED',
+    PLAYLIST_SELECTOR_UPDATE_NEEDED: '@@playlist-selector/UPDATE_NEEDED',
     PLAYLISTS_UPDATED: '@@playlists/UPDATED',
     PLAYLIST_ADDED: '@@playlist/ADDED',
     SIGNED_IN: '@@user/SIGNED_IN',

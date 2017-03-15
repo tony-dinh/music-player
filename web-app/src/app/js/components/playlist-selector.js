@@ -15,7 +15,7 @@ PlaylistSelector.showSelectionFor = function(songId) {
     Overlay.show()
 
     const $playlistSel = $(LIST_SEL_SELECTOR)
-    $playlistSel.removeClass(HIDDEN_CLASS).attr('data-song-id', songId)
+    $playlistSel.removeClass(HIDDEN_CLASS).data('song-id', songId)
 }
 
 PlaylistSelector.hide = function() {
@@ -36,6 +36,15 @@ PlaylistSelector.addPlaylist = function(playlistObj) {
     $playlistList.append($selectorEl[0])
 }
 
+const _addPlaylists = function() {
+    if (!$.isArray(PLAYLISTS) || PLAYLISTS.length === 0) {
+        return
+    }
+    const $playlistList = $(PLAYLIST_LIST_SELECTOR)
+    $playlistList.html('')
+    PLAYLISTS.forEach(PlaylistSelector.addPlaylist)
+}
+
 const _bindEvents = function() {
     const $body = $('body')
     const $playlistSel = $(LIST_SEL_SELECTOR)
@@ -51,7 +60,6 @@ const _bindEvents = function() {
         const selectedSongId = $playlistSel.data('song-id')
         const selectedPlaylistId = $(this).data('id')
         const playlistObj = UTILS.getObjWithId(PLAYLISTS, selectedPlaylistId)
-
         if (!playlistObj.songs.includes(parseInt(selectedSongId))) {
             Request.addSongToPlaylist(selectedSongId, selectedPlaylistId)
                 .then(function() {
@@ -68,16 +76,9 @@ const _bindEvents = function() {
         PlaylistSelector.addPlaylist(playlistObj)
     })
 
-    $body.on(Events.names.MUSIC_LOADED, function() {
+    $body.on(Events.names.PLAYLIST_SELECTOR_UPDATE_NEEDED, function() {
         _addPlaylists()
     })
-}
-
-const _addPlaylists = function() {
-    if (!$.isArray(PLAYLISTS) || PLAYLISTS.length === 0) {
-        return
-    }
-    PLAYLISTS.forEach(PlaylistSelector.addPlaylist)
 }
 
 const PlaylistSelectorUI = function() {

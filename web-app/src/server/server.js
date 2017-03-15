@@ -15,6 +15,7 @@ var status = {
     MOVED_PERMANENTLY: 301,
     BAD_REQUEST: 400,
     UNAUTHORIZED: 401,
+    FORBIDDEN: 403,
     NOT_FOUND: 404,
     INTERNAL_ERROR: 500
 };
@@ -49,16 +50,7 @@ var isJSON = function(string) {
     }
 };
 
-var onRequestEnd = function(request, callback) {
-    var body = '';
-    request.on('data', function(data) {
-        body += data;
-    });
-
-    request.on('end', function() {
-        callback(body);
-    });
-}
+var jsonBodyParser = bodyParser.json()
 
 var checkAuthorization = function(request, response, next) {
     if (request.url === '/login') {
@@ -66,27 +58,23 @@ var checkAuthorization = function(request, response, next) {
     }
     STORAGE.checkActiveSession({sessionKey: request.cookies.sessionKey})
         .then(function(session) {
-            if (!session.isActive) {
-                if (/^\/api/.test(request.url)) {
-                    next()
-                } else {
-                    return response.redirect(status.MOVED_PERMANENTLY, '/login');
-                }
-            } else {
-                request.sessionUser = session.sessionUser;
-                if (request.url === '/') {
-                    return response.redirect(status.MOVED_PERMANENTLY, '/playlists');
-                } else {
-                    return next();
-                }
-            }
+            request.sessionUser = session.sessionUser;
+            next();
         });
+};
+
+var redirectMiddleware = function(request, response, next) {
+    if (/^\/login$/.test(request.url)) return next();
+    if (!request.sessionUser) return response.redirect(status.MOVED_PERMANENTLY, '/login');
+    if (request.sessionUser && /^\/$/.test(request.url)) response.redirect(status.MOVED_PERMANENTLY, '/playlists');
+    if (request.sessionUser) return next();
 };
 
 // MIDDLEWARE
 // ---
 
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(function(request, response, next) {
     console.log(`\n[ ${request.method} ] ${request.url}\n`);
     next();
@@ -115,10 +103,10 @@ app.get(/^\/assets\/[^\/]*\.jpg$/, function(request, response) {
 });
 
 // Redirect
-app.get('/', checkAuthorization);
+app.get('/', checkAuthorization, redirectMiddleware);
 
 // HTML
-app.get(/^\/(login|playlists|library|search)$/, checkAuthorization,function(request, response) {
+app.get(/^\/(login|playlists|library|search)$/, checkAuthorization, redirectMiddleware,function(request, response) {
     sendFile(CLIENT_DIR, 'index.html', response);
 });
 
@@ -134,51 +122,47 @@ app.get(/\/vendor\/.*\.js/, function(request, response) {
 
 // POST
 // ---
-app.post('/api/playlists', function(request, response) {
-    onRequestEnd(request, function(body) {
-        if (!isJSON(body)) {
-            return response.sendStatus(status.BAD_REQUEST);
-        }
+app.post('/api/playlists', jsonBodyParser, checkAuthorization, function(request, response) {
+    if (!request.sessionUser) {
+        return response.sendStatus(status.FORBIDDEN)
+    }
 
-        var playlistData = JSON.parse(body);
-        if (typeof playlistData.name !== 'string') {
-            return response.sendStatus(status.BAD_REQUEST);
-        }
-
-        STORAGE.addNewPlaylist(playlistData)
-            .then(function(playlistInstance) {
-                var playlist = {
-                    id: playlistInstance.id,
-                    name: playlistData.name
-                };
-                response.json(playlist);
-            })
-            .catch(function(err) {
-                console.log(err.message);
-                response.sendStatus(status.INTERNAL_ERROR);
-            });
-    });
+    STORAGE.addNewPlaylistForUser(request.body.name, request.sessionUser)
+        .then(function(playlistInstance) {
+            var playlist = {
+                id: playlistInstance.id,
+                name: request.body.name
+            };
+            response.json(playlist);
+        })
+        .catch(function(err) {
+            console.log(err.message);
+            response.sendStatus(status.INTERNAL_ERROR);
+        });
 });
 
-app.post('/api/playlists/:playlistId([0-9]+)', function(request, response) {
-    onRequestEnd(request, function(body) {
-        if (!isJSON(body)) {
-            return response.sendStatus(status.BAD_REQUEST);
-        }
+app.post('/api/playlists/:playlistId([0-9]+)', jsonBodyParser, checkAuthorization, function(request, response) {
+    if (!request.sessionUser) {
+        return response.sendStatus(status.FORBIDDEN)
+    }
 
-        var playlistData = JSON.parse(body);
-        STORAGE.addSongToPlaylist(request.params.playlistId, parseInt(playlistData.song))
-            .then(function() {
-                response.sendStatus(status.OK);
-            })
-            .catch(function(err) {
-                console.log(err.message);
-                response.sendStatus(status.INTERNAL_ERROR);
-            });
-    });
+    STORAGE.userHasPlaylistPermission(request.sessionUser, request.params.playlistId)
+        .then(function(hasPermission) {
+            if (!hasPermission) {
+                return response.sendStatus(status.FORBIDDEN)
+            }
+            STORAGE.addSongToPlaylist(request.params.playlistId, parseInt(request.body.song))
+                .then(function() {
+                    response.sendStatus(status.OK);
+                })
+                .catch(function(err) {
+                    console.log(err.message);
+                    response.sendStatus(status.INTERNAL_ERROR);
+                });
+        })
 });
 
-app.post('/login', bodyParser.json(), function(request, response) {
+app.post('/login', jsonBodyParser, function(request, response) {
     if (!request.body.username || !request.body.password) {
         return response.sendStatus(status.UNAUTHORIZED);
     }
@@ -202,22 +186,24 @@ app.post('/login', bodyParser.json(), function(request, response) {
 
 // DELETE
 // ---
-app.delete('/playlists/:playlistId([0-9]+)', function(request, response) {
-    onRequestEnd(request, function(body) {
-        if (!isJSON(body)) {
-            return response.sendStatus(status.BAD_REQUEST);
-        }
-
-        var playlistData = JSON.parse(body);
-        STORAGE.deleteSongFromPlaylist(request.params.playlistId, parseInt(playlistData.song))
-            .then(function() {
-                response.sendStatus(status.OK);
-            })
-            .catch(function(err) {
-                console.log(err.message);
-                response.sendStatus(status.INTERNAL_ERROR);
-            });
-    });
+app.delete('/playlists/:playlistId([0-9]+)', jsonBodyParser, checkAuthorization, function(request, response) {
+    if (!request.sessionUser) {
+        return response.sendStatus(status.FORBIDDEN)
+    }
+    STORAGE.userHasPlaylistPermission(request.sessionUser, request.params.playlistId)
+        .then(function(hasPermission) {
+            if (!hasPermission) {
+                return response.sendStatus(status.FORBIDDEN)
+            }
+            STORAGE.deleteSongFromPlaylist(request.params.playlistId, parseInt(request.body.song))
+                .then(function() {
+                    response.sendStatus(status.OK);
+                })
+                .catch(function(err) {
+                    console.log(err.message);
+                    response.sendStatus(status.INTERNAL_ERROR);
+                });
+        })
 });
 
 // Start the server on port 3000

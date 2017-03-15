@@ -1,6 +1,6 @@
 const Request = {}
 
-Request.getMusicData = async function(key) {
+Request.getMusicData = function(key) {
     return new Promise ((resolve, reject) => {
         $.get(`/api/${key}`, (data, status, xhr) => {
             if (xhr.status !== 200) {
@@ -12,25 +12,34 @@ Request.getMusicData = async function(key) {
     })
 }
 
-Request.addNewPlaylist = async function(playlist) {
+Request.addNewPlaylist = function(playlist) {
     return new Promise((resolve, reject) => {
-        $.post('/api/playlists/', JSON.stringify(playlist), (data, status, xhr) => {
+        $.post('/api/playlists/', playlist, (data, status, xhr) => {
             if (xhr.status !== 200) {
                 reject(`[ Request ] Failed to add new playlist: ${status}`)
             }
             resolve(data)
-        })
+        }, 'json')
     })
 }
 
-Request.addSongToPlaylist = async function(songId, playlistId) {
+Request.addSongToPlaylist = function(songId, playlistId) {
     return new Promise((resolve, reject) => {
-        $.post(`/api/playlists/${playlistId}`, JSON.stringify({song: songId}), (data, status, xhr) => {
-            if (xhr.status !== 200) {
+        $.ajax({
+            url: `api/playlists/${playlistId}`,
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({song: songId}),
+            success: (data, status, xhr) => {
+                if (xhr.status !== 200) {
+                    reject(`[ Request ] Failed to add song to playlist: ${status}`)
+                }
+                resolve()
+            },
+            error: () => {
                 reject(`[ Request ] Failed to add song to playlist: ${status}`)
             }
-            resolve()
-        })
+        });
     })
 }
 
@@ -38,6 +47,7 @@ Request.removeSongFromPlaylist = async function(songId, playlistId) {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: `/playlists/${playlistId}`,
+            contentType: 'application/json',
             type: 'DELETE',
             data: JSON.stringify({song: songId}),
             success: (data, status, xhr) => {

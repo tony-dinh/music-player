@@ -35,6 +35,7 @@ const _bindEvents = function() {
         Request.getMusicData('playlists').then(function(playlists) {
             window.PLAYLISTS = playlists
             $body.trigger(Events.names.PLAYLISTS_UPDATED)
+            $body.trigger(Events.names.PLAYLIST_SELECTOR_UPDATE_NEEDED)
         })
     })
 }
@@ -49,6 +50,7 @@ const loadMusic = function() {
         window.SONGS = musicData[1]
         $body.trigger(Events.names.SONGS_UPDATED)
         $body.trigger(Events.names.PLAYLISTS_UPDATED)
+        $body.trigger(Events.names.PLAYLIST_SELECTOR_UPDATE_NEEDED)
     })
 }
 
@@ -65,7 +67,7 @@ const App =  function() {
     PlaylistSelectorUI()
     _initialState()
 
-    loadMusic().then(() => $('body').trigger(Events.names.MUSIC_LOADED))
+    loadMusic()
 }
 
 App()

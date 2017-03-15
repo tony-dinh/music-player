@@ -74,8 +74,21 @@ Storage.addSongToPlaylist = function(playlistId, songId) {
         });
 };
 
-Storage.addNewPlaylist = function(playlist) {
-    return models.Playlist.create(playlist, {fields: ['name']});
+Storage.addNewPlaylistForUser = function(playlistName, userId) {
+    return new Promise((resolve, reject) => {
+        models.User.findById(userId).then((userInstance) => {
+            if (!userInstance) {
+                reject()
+            }
+            models.Playlist.create({name:playlistName})
+                .then(function(playlistInstance) {
+                    userInstance.addPlaylist(playlistInstance.id)
+                        .then(function() {
+                            resolve(playlistInstance)
+                        })
+                })
+        })
+    })
 };
 
 Storage.deleteSongFromPlaylist = function(playlistId, songId) {
@@ -97,6 +110,16 @@ Storage.checkValidLogin = function(loginInfo) {
         return {id: userInstance.id, isValid: true}
     });
 };
+
+Storage.userHasPlaylistPermission = function(userId, playlistId) {
+    return models.User.findById(userId).then(function(userInstance) {
+        if (!userInstance) {
+            return false
+        }
+
+        return userInstance.hasPlaylist(playlistId)
+    })
+}
 
 Storage.checkActiveSession = function(session) {
     if (!session.sessionKey) {
