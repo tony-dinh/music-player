@@ -67,6 +67,23 @@ Storage.getSongsForPlaylistInstance = function(playlistInstance) {
         });
 };
 
+Storage.getOtherUsers = function(currentUserId) {
+    return models.User.findAll({
+        where: {
+            id: {
+                ne: currentUserId
+            }
+        }
+    }).then(function(users) {
+        return users.map(function(userInstances) {
+            return {
+                id: userInstances.id,
+                username: userInstances.username
+            }
+        });
+    })
+};
+
 Storage.addSongToPlaylist = function(playlistId, songId) {
     return models.Playlist.findById(playlistId)
         .then(function(playlistInstance) {
@@ -140,6 +157,22 @@ Storage.checkActiveSession = function(session) {
             resolve(session);
         });
     });
+};
+
+Storage.grantUserPermissionForPlaylist = function({userId, playlistId}) {
+    if (!userId || !playlistId) {
+        return Promise.reject()
+    }
+
+    return new Promise((resolve, reject) => {
+        models.Playlist.findById(playlistId)
+            .then((playlistInstance) => {
+                if (!playlistInstance) {
+                    reject()
+                }
+                resolve(playlistInstance.addUser(userId))
+            })
+    })
 };
 
 Storage.addSession = function(session) {

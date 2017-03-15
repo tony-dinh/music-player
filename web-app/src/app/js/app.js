@@ -7,6 +7,8 @@ import Utils from './global/utils'
 // Components
 import { NavBarUI } from './components/nav-bar'
 import { PlaylistSelectorUI } from './components/playlist-selector'
+import { UserSelectorUI } from './components/user-selector'
+
 
 // UI
 import LibraryUI from './ui/library'
@@ -65,6 +67,7 @@ const App =  function() {
     PlaylistsUI()
     SearchUI()
     PlaylistSelectorUI()
+    UserSelectorUI()
     _initialState()
 
     loadMusic()

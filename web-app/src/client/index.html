@@ -46,7 +46,8 @@
 
             <!-- Overlay -->
             <div class="c-overlay u-flex-row u--center">
-                <div class="js-overlay-modal c-list-selector__container u-hidden">
+                <!-- Playlist Selector -->
+                <div class="js-overlay-modal js-playlist-selector c-list-selector__container u-hidden">
                     <div class="c-list-selector">
                         <div class="c-list-selector__header u-flex-row u--center">
                             <h5 class="u-grow">Choose a Playlist</h5>
@@ -69,6 +70,18 @@
                             <button class="js-add c-button c--primary u-half-width u-margin-left-medium" type="button" name="add-playlist-button">Add</button>
                         </div>
                     </form>
+                </div>
+
+                <!-- Add User Selector -->
+                <div class="js-overlay-modal js-user-selector c-list-selector__container u-hidden">
+                    <div class="c-list-selector">
+                        <div class="c-list-selector__header u-flex-row u--center">
+                            <h5 class="u-grow">Select a User</h5>
+                            <button class="c-list-selector__close-button glyphicon glyphicon-remove" type="button" name="list-selector-close-button"></button>
+                        </div>
+                        <ul id="user-list-selector">
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -95,6 +108,9 @@
             <div id="playlist-details" class="t-tab">
                 <div class="c-playlist-details__heading-container u-padding-large">
                     <h1>Playlist Name</h1>
+                </div>
+                <div class="c-button__container u-flex-row u--middle">
+                    <button id="user-button" class="c-button c--primary u-full-width" type="button" name="add-user"><span class="glyphicon glyphicon-plus"></span> User</button>
                 </div>
                 <div id="playlist-song-list" class="c-table-grid"></div>
             </div>

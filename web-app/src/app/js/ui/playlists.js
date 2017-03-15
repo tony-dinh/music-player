@@ -3,6 +3,7 @@ import Request from '../global/request'
 
 import { NavBar } from '../components/nav-bar'
 import { AddPlaylistForm, AddPlaylistFormUI } from '../components/add-playlist-form'
+import { UserSelector } from '../components/user-selector'
 
 const Playlists = {}
 
@@ -47,6 +48,11 @@ const _bindEvents = function() {
 
     $body.on('click', '#playlist-button', function(e) {
         AddPlaylistForm.show()
+    })
+
+    $body.on('click', '#user-button', function(e) {
+        const playlistDetailsId = $('#playlist-details').data('playlist-id')
+        UserSelector.showSelectionFor(playlistDetailsId)
     })
 
     $body.on('click', '#playlist-song-list .js-remove-from-playlist', function(e) {

@@ -12,6 +12,18 @@ Request.getMusicData = function(key) {
     })
 }
 
+Request.getUsers = function() {
+    return new Promise((resolve, reject) => {
+        $.get('/api/users', (data, status, xhr) => {
+            if (xhr.status !== 200) {
+                console.error(`Failed to retrieve ${key}`)
+                reject()
+            }
+            resolve(data.users)
+        })
+    })
+}
+
 Request.addNewPlaylist = function(playlist) {
     return new Promise((resolve, reject) => {
         $.post('/api/playlists/', playlist, (data, status, xhr) => {
@@ -43,7 +55,7 @@ Request.addSongToPlaylist = function(songId, playlistId) {
     })
 }
 
-Request.removeSongFromPlaylist = async function(songId, playlistId) {
+Request.removeSongFromPlaylist = function(songId, playlistId) {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: `/playlists/${playlistId}`,
@@ -60,7 +72,7 @@ Request.removeSongFromPlaylist = async function(songId, playlistId) {
     })
 }
 
-Request.submitLogin = async function(data) {
+Request.submitLogin = function(data) {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: '/login',
@@ -75,6 +87,27 @@ Request.submitLogin = async function(data) {
             },
             error: () => {
                 reject(`[ Request ] Login Failed`)
+            }
+
+        })
+    })
+}
+
+Request.grantUserPlaylistPermission = function({userId, playlistId}) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/playlists/${playlistId}/users`,
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({user: userId}),
+            success: (data, status, xhr) => {
+                if (xhr.status !== 200) {
+                    reject(`[ Request ] Failed to grant permission`)
+                }
+                resolve(data)
+            },
+            error: () => {
+                reject(`[ Request ] Failed to grant permission`)
             }
 
         })

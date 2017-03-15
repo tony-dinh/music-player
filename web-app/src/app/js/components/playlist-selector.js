@@ -3,7 +3,7 @@ import Request from '../global/request'
 
 import Overlay from './overlay'
 
-const LIST_SEL_SELECTOR = '.c-list-selector__container'
+const LIST_SEL_SELECTOR = '.js-playlist-selector'
 const PLAYLIST_LIST_SELECTOR = '#playlist-list-selector'
 const HIDDEN_CLASS = 'u-hidden'
 
@@ -31,7 +31,7 @@ PlaylistSelector.addPlaylist = function(playlistObj) {
     $selectorEl
         .addClass(selectorClass)
         .text(playlistObj.name)
-        .attr('data-id', playlistObj.id)
+        .data('id', playlistObj.id)
 
     $playlistList.append($selectorEl[0])
 }
@@ -48,14 +48,14 @@ const _addPlaylists = function() {
 const _bindEvents = function() {
     const $body = $('body')
     const $playlistSel = $(LIST_SEL_SELECTOR)
-    const $listSelCloseBtn = $('.c-list-selector__close-button')
+    const $listSelCloseBtn = $('.js-playlist-selector .c-list-selector__close-button')
 
     $listSelCloseBtn.on('click', function(e) {
         e.stopPropagation()
         PlaylistSelector.hide()
     })
 
-    $body.on('click', '.c-list-selector__item', function(e) {
+    $body.on('click', '.js-playlist-selector .c-list-selector__item', function(e) {
         e.stopPropagation()
         const selectedSongId = $playlistSel.data('song-id')
         const selectedPlaylistId = $(this).data('id')

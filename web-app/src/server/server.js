@@ -97,6 +97,16 @@ app.get('/api/:searchKey(songs|playlists)', checkAuthorization, function(request
         .catch(rejectHandler);
 });
 
+app.get('/api/users', checkAuthorization, function(request, response) {
+        if (!request.sessionUser) {
+        return response.sendStatus(status.FORBIDDEN)
+    }
+    STORAGE.getOtherUsers(request.sessionUser)
+        .then(function(users) {
+            response.status(status.OK).json({users: users})
+        })
+});
+
 // Assets
 app.get(/^\/assets\/[^\/]*\.jpg$/, function(request, response) {
     sendFile(CLIENT_DIR, request.url, response);
@@ -162,6 +172,21 @@ app.post('/api/playlists/:playlistId([0-9]+)', jsonBodyParser, checkAuthorizatio
         })
 });
 
+app.post('/api/playlists/:playlistId([0-9]+)/users', jsonBodyParser, checkAuthorization, function(request, response) {
+    if (!request.sessionUser) {
+        return response.sendStatus(status.FORBIDDEN)
+    }
+
+    STORAGE.grantUserPermissionForPlaylist({
+        userId: request.body.user,
+        playlistId: request.params.playlistId
+    }).then(function() {
+        response.sendStatus(status.OK)
+    }).catch(function() {
+        response.sendStatus(status.INTERNAL_ERROR)
+    })
+});
+
 app.post('/login', jsonBodyParser, function(request, response) {
     if (!request.body.username || !request.body.password) {
         return response.sendStatus(status.UNAUTHORIZED);
@@ -183,6 +208,7 @@ app.post('/login', jsonBodyParser, function(request, response) {
         }
     })
 });
+
 
 // DELETE
 // ---
