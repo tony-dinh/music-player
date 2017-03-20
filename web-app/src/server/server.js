@@ -7,6 +7,9 @@ var bodyParser = require('body-parser');
 var port = process.env.PORT || 3000;
 var app = express();
 
+var server = require('http').Server(app);
+var Socket = require('./socket');
+
 var STORAGE = require('../storage/utils');
 var CLIENT_DIR = `${__dirname}/../client`;
 
@@ -41,17 +44,6 @@ var sendFile = function(rootDir, relPath, response) {
     });
 };
 
-var isJSON = function(string) {
-    try {
-        JSON.parse(string);
-        return true;
-    } catch (e) {
-        return false;
-    }
-};
-
-var jsonBodyParser = bodyParser.json()
-
 var checkAuthorization = function(request, response, next) {
     if (request.url === '/login') {
         return next();
@@ -70,9 +62,14 @@ var redirectMiddleware = function(request, response, next) {
     if (request.sessionUser) return next();
 };
 
+var jsonBodyParser = bodyParser.json()
+
+// SOCKETS
+// ---
+Socket.open(server);
+
 // MIDDLEWARE
 // ---
-
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(function(request, response, next) {
@@ -163,6 +160,14 @@ app.post('/api/playlists/:playlistId([0-9]+)', jsonBodyParser, checkAuthorizatio
             }
             STORAGE.addSongToPlaylist(request.params.playlistId, parseInt(request.body.song))
                 .then(function() {
+                    Socket.emitEvent({
+                        room: `${request.params.playlistId}`,
+                        data: {
+                            event: Socket.events.PLAYLIST_SONG_ADDED,
+                            song: request.body.song,
+                            playlist: request.params.playlistId
+                        }
+                    });
                     response.sendStatus(status.OK);
                 })
                 .catch(function(err) {
@@ -223,6 +228,14 @@ app.delete('/playlists/:playlistId([0-9]+)', jsonBodyParser, checkAuthorization,
             }
             STORAGE.deleteSongFromPlaylist(request.params.playlistId, parseInt(request.body.song))
                 .then(function() {
+                    Socket.emitEvent({
+                        room: `${request.params.playlistId}`,
+                        data: {
+                            event: Socket.events.PLAYLIST_SONG_DELETED,
+                            song: request.body.song,
+                            playlist: request.params.playlistId
+                        }
+                    });
                     response.sendStatus(status.OK);
                 })
                 .catch(function(err) {
@@ -234,7 +247,7 @@ app.delete('/playlists/:playlistId([0-9]+)', jsonBodyParser, checkAuthorization,
 
 // Start the server on port 3000
 STORAGE.sync().then(function() {
-    app.listen(port, function(err) {
+    server.listen(port, function(err) {
         if (err) {
             return console.log(err);
         }

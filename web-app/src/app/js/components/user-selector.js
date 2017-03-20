@@ -32,7 +32,7 @@ UserSelector.addUser = function(userObj) {
 
     $selectorEl
         .addClass(selectorClass)
-        .text(userObj.username)
+        .text(userObj.name)
         .data('id', userObj.id)
 
     $userList.append($selectorEl[0])
@@ -50,7 +50,7 @@ const _addUsers = function(users) {
 const _bindEvents = function() {
     const $body = $('body')
     const $userSelector = $(LIST_SEL_SELECTOR)
-    const $userSelCloseBtn = $('.js-user-selector .c-user-selector__close-button')
+    const $userSelCloseBtn = $('.js-user-selector .c-list-selector__close-button')
 
     $userSelCloseBtn.on('click', function(e) {
         e.stopPropagation()

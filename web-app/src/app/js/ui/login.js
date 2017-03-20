@@ -1,5 +1,6 @@
 import Events from '../global/events'
 import Request from '../global/request'
+import Socket from '../global/socket'
 import { NavBar } from '../components/nav-bar'
 
 const LOGIN_BUTTON_SELECTOR = '.js-login-button'
@@ -26,6 +27,8 @@ const _bindEvents = function() {
         }
         Request.submitLogin(loginInfo)
             .then((data) => {
+                // Listen for real-time updates
+                Socket.connect()
                 $body.trigger(Events.names.SIGNED_IN)
                 $body.trigger(Events.names.PLAYLISTS_UPDATE_NEEDED)
             }).catch((err) => console.log(err))

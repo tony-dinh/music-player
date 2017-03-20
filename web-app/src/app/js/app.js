@@ -1,8 +1,8 @@
-import cookieParser from 'cookie-parser'
 // Global
 import Events from './global/events'
 import Request from './global/request'
 import Utils from './global/utils'
+import Socket from './global/socket'
 
 // Components
 import { NavBarUI } from './components/nav-bar'
@@ -60,7 +60,7 @@ const App =  function() {
     window.UTILS = Utils
     _bindEvents()
 
-    // Load common dependencies
+    // Load UI components / bind events
     NavBarUI()
     LoginUI()
     LibraryUI()

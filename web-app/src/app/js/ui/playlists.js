@@ -76,6 +76,31 @@ const _bindEvents = function() {
     })
 
     $body.on(Events.names.PLAYLISTS_UPDATED, _loadPlaylists)
+
+    $body.on(Events.names.PLAYLIST_SONG_ADDED, function(e, payload) {
+        const $playlistDetails = $('#playlist-details')
+        const playlistDetailsId = $playlistDetails.data('playlist-id')
+
+        // Only update UI if playlist is being viewed
+        if (payload.playlistId != playlistDetailsId || !$playlistDetails.hasClass('c--active')) {
+            return;
+        }
+
+        const $songEl = UTILS.songElementFor(UTILS.getObjWithId(SONGS, payload.songId))
+        $('#playlist-song-list').append($songEl[0])
+    })
+
+    $body.on(Events.names.PLAYLIST_SONG_DELETED, function(e, payload) {
+        const $playlistDetails = $('#playlist-details')
+        const playlistDetailsId = $playlistDetails.data('playlist-id')
+
+        // Only update UI if playlist is being viewed
+        if (payload.playlistId != playlistDetailsId || !$playlistDetails.hasClass('c--active')) {
+            return;
+        }
+
+        $(`#playlist-song-list .c-library__item[data-id=${payload.songId}]`).remove()
+    })
 }
 
 const PlaylistsUI = function() {

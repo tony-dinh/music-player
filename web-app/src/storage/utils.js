@@ -78,7 +78,7 @@ Storage.getOtherUsers = function(currentUserId) {
         return users.map(function(userInstances) {
             return {
                 id: userInstances.id,
-                username: userInstances.username
+                name: userInstances.username
             }
         });
     })
@@ -176,7 +176,32 @@ Storage.grantUserPermissionForPlaylist = function({userId, playlistId}) {
 };
 
 Storage.addSession = function(session) {
-    return models.Session.create(session);
+    return models.Session.destroy({
+        where: { sessionUser: session.sessionUser }
+    }).then(function() {
+        return models.Session.create(session)
+    })
+};
+
+Storage.getUserForSession = function({sessionKey}) {
+    return models.Session.findOne({
+        where: {
+            sessionKey: sessionKey
+        }
+    }).then((sessionInstance) => {
+        return !!sessionInstance
+            ? sessionInstance.getUser()
+            : Promise.reject()
+    });
+};
+
+Storage.getRoomsForUser = function(userInstance) {
+    return userInstance.getPlaylists()
+        .then((playlistInstances) => {
+            return playlistInstances.map((playlist) => {
+                return `${playlist.id}`
+            })
+        });
 };
 
 module.exports = Storage;
