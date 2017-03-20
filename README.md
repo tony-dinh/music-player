@@ -11,7 +11,6 @@ A music player created as part of a series of exercises for a course in Web Info
 |  `Sass`       | CSS preprocessor to add a little sass              |
 |  `Webpack`    | Dependency manager                                 |
 
-
 **NOTE:** Bootstrap 3.0 is included solely for the icons -- Any other source of icons will work. Grid/layout built using flex-box.
 
 ## Getting Started
@@ -39,25 +38,6 @@ npm start
 ```
 
 Head over to your browser and open up `localhost:3000` to view the app.
-
-#### Provisioned Environment
-
-In order to set up your environment, you will need:
-
-1. [Vagrant](https://www.vagrantup.com/downloads.html)
-1. [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-
-To boot up the virtual machine, run the following at the ROOT of the project folder:
-```
-vagrant up
-```
-
-Head over to your browser and open up `localhost:8080` to view the app.
-
-**NOTE:** To shut down your provisioned environment, use the following command:
-```
-vagrant halt
-```
 
 ### Developing
 You can enable hot loading style changes with the following command:

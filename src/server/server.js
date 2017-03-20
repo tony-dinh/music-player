@@ -137,6 +137,7 @@ app.post('/api/playlists', jsonBodyParser, checkAuthorization, function(request,
 
     STORAGE.addNewPlaylistForUser(request.body.name, request.sessionUser)
         .then(function(playlistInstance) {
+            Socket.clients[request.cookies.sessionKey].join(`${playlistInstance.id}`, () => Socket.log(`${request.cookies.sessionKey} Joined room ${playlistInstance.id}`))
             var playlist = {
                 id: playlistInstance.id,
                 name: request.body.name

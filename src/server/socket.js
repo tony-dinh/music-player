@@ -36,6 +36,12 @@ Socket._connect = function(socket) {
         }).catch((err) => {
             Socket.log(`Unable to find user for session`)
         });
+
+        Socket.clients[cookies.sessionKey] = socket
+        socket.on('disconnect', () => {
+            delete Socket.clients[cookies.sessionKey]
+        })
+
         Socket.log(`User connected: ${cookies.sessionKey}.`);
     }
 };
