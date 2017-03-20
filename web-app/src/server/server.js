@@ -129,6 +129,7 @@ app.get(/\/vendor\/.*\.js/, function(request, response) {
 
 // POST
 // ---
+
 app.post('/api/playlists', jsonBodyParser, checkAuthorization, function(request, response) {
     if (!request.sessionUser) {
         return response.sendStatus(status.FORBIDDEN)

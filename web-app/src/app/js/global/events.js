@@ -8,7 +8,7 @@ Events.names = {
     PLAYLISTS_UPDATED: '@@playlists/UPDATED',
     PLAYLIST_ADDED: '@@playlist/ADDED',
     PLAYLIST_SONG_ADDED: '@@playlist/SONG_ADDED',
-    PLAYLIST_SONG_DELETED: '@@playlist/SONG_ADDED',
+    PLAYLIST_SONG_DELETED: '@@playlist/SONG_DELETED',
     SIGNED_IN: '@@user/SIGNED_IN',
     SONGS_UPDATED: '@@songs/UPDATED'
 }
