@@ -1,7 +1,20 @@
 const Events = {}
+const $body = $('body')
 
 Events.names = {
-    PLAYLIST_ADDED: '@@playlist/ADDED'
+    MUSIC_LOADED: '@@music/LOADED',
+    PLAYLISTS_UPDATE_NEEDED: '@@playlists/UPDATE_NEEDED',
+    PLAYLIST_SELECTOR_UPDATE_NEEDED: '@@playlist-selector/UPDATE_NEEDED',
+    PLAYLISTS_UPDATED: '@@playlists/UPDATED',
+    PLAYLIST_ADDED: '@@playlist/ADDED',
+    PLAYLIST_SONG_ADDED: '@@playlist/SONG_ADDED',
+    PLAYLIST_SONG_DELETED: '@@playlist/SONG_DELETED',
+    SIGNED_IN: '@@user/SIGNED_IN',
+    SONGS_UPDATED: '@@songs/UPDATED'
+}
+
+Events.trigger = function(event, payload) {
+    $body.trigger(event, payload)
 }
 
 export default Events

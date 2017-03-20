@@ -3,6 +3,7 @@ import Request from '../global/request'
 
 import { NavBar } from '../components/nav-bar'
 import { AddPlaylistForm, AddPlaylistFormUI } from '../components/add-playlist-form'
+import { UserSelector } from '../components/user-selector'
 
 const Playlists = {}
 
@@ -49,6 +50,11 @@ const _bindEvents = function() {
         AddPlaylistForm.show()
     })
 
+    $body.on('click', '#user-button', function(e) {
+        const playlistDetailsId = $('#playlist-details').data('playlist-id')
+        UserSelector.showSelectionFor(playlistDetailsId)
+    })
+
     $body.on('click', '#playlist-song-list .js-remove-from-playlist', function(e) {
         const $songEl = $(this).closest('.c-library__item')
         const songId = $songEl.data('id')
@@ -68,11 +74,37 @@ const _bindEvents = function() {
     $body.on(Events.names.PLAYLIST_ADDED, function(e, playlistObj) {
         Playlists.add(playlistObj)
     })
+
+    $body.on(Events.names.PLAYLISTS_UPDATED, _loadPlaylists)
+
+    $body.on(Events.names.PLAYLIST_SONG_ADDED, function(e, payload) {
+        const $playlistDetails = $('#playlist-details')
+        const playlistDetailsId = $playlistDetails.data('playlist-id')
+
+        // Only update UI if playlist is being viewed
+        if (payload.playlistId != playlistDetailsId || !$playlistDetails.hasClass('c--active')) {
+            return;
+        }
+
+        const $songEl = UTILS.songElementFor(UTILS.getObjWithId(SONGS, payload.songId))
+        $('#playlist-song-list').append($songEl[0])
+    })
+
+    $body.on(Events.names.PLAYLIST_SONG_DELETED, function(e, payload) {
+        const $playlistDetails = $('#playlist-details')
+        const playlistDetailsId = $playlistDetails.data('playlist-id')
+
+        // Only update UI if playlist is being viewed
+        if (payload.playlistId != playlistDetailsId || !$playlistDetails.hasClass('c--active')) {
+            return;
+        }
+
+        $(`#playlist-song-list .c-library__item[data-id=${payload.songId}]`).remove()
+    })
 }
 
 const PlaylistsUI = function() {
     AddPlaylistFormUI()
-    _loadPlaylists()
     _bindEvents()
 }
 

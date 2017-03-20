@@ -43,6 +43,7 @@ const _bindEvents = function() {
         Request
             .addNewPlaylist(playlist)
             .then(function(playlistObj) {
+                playlistObj.songs = playlistObj.songs || []
                 PLAYLISTS.push(playlistObj)
                 $('body').trigger(Events.names.PLAYLIST_ADDED, playlistObj)
                 dismissFormHandler(e)

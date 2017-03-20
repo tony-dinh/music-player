@@ -12,6 +12,11 @@ module.exports = function(sequelize, DataType) {
                     through: 'Songs_Playlists',
                     foreignKey: 'playlist_id'
                 });
+
+                Playlist.belongsToMany(models.User, {
+                    through: 'Users_Playlists',
+                    foreignKey: 'playlist_id'
+                });
             }
         }
     }

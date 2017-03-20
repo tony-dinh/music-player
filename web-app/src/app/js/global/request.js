@@ -1,6 +1,6 @@
 const Request = {}
 
-Request.getMusicData = async function(key) {
+Request.getMusicData = function(key) {
     return new Promise ((resolve, reject) => {
         $.get(`/api/${key}`, (data, status, xhr) => {
             if (xhr.status !== 200) {
@@ -12,32 +12,54 @@ Request.getMusicData = async function(key) {
     })
 }
 
-Request.addNewPlaylist = async function(playlist) {
+Request.getUsers = function() {
     return new Promise((resolve, reject) => {
-        $.post('/api/playlists/', JSON.stringify(playlist), (data, status, xhr) => {
+        $.get('/api/users', (data, status, xhr) => {
+            if (xhr.status !== 200) {
+                console.error(`Failed to retrieve ${key}`)
+                reject()
+            }
+            resolve(data.users)
+        })
+    })
+}
+
+Request.addNewPlaylist = function(playlist) {
+    return new Promise((resolve, reject) => {
+        $.post('/api/playlists/', playlist, (data, status, xhr) => {
             if (xhr.status !== 200) {
                 reject(`[ Request ] Failed to add new playlist: ${status}`)
             }
             resolve(data)
-        })
+        }, 'json')
     })
 }
 
-Request.addSongToPlaylist = async function(songId, playlistId) {
+Request.addSongToPlaylist = function(songId, playlistId) {
     return new Promise((resolve, reject) => {
-        $.post(`/api/playlists/${playlistId}`, JSON.stringify({song: songId}), (data, status, xhr) => {
-            if (xhr.status !== 200) {
+        $.ajax({
+            url: `api/playlists/${playlistId}`,
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({song: songId}),
+            success: (data, status, xhr) => {
+                if (xhr.status !== 200) {
+                    reject(`[ Request ] Failed to add song to playlist: ${status}`)
+                }
+                resolve()
+            },
+            error: () => {
                 reject(`[ Request ] Failed to add song to playlist: ${status}`)
             }
-            resolve()
-        })
+        });
     })
 }
 
-Request.removeSongFromPlaylist = async function(songId, playlistId) {
+Request.removeSongFromPlaylist = function(songId, playlistId) {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: `/playlists/${playlistId}`,
+            contentType: 'application/json',
             type: 'DELETE',
             data: JSON.stringify({song: songId}),
             success: (data, status, xhr) => {
@@ -46,6 +68,48 @@ Request.removeSongFromPlaylist = async function(songId, playlistId) {
                 }
                 resolve()
             }
+        })
+    })
+}
+
+Request.submitLogin = function(data) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/login',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify(data),
+            success: (data, status, xhr) => {
+                if (xhr.status !== 200) {
+                    reject(`[ Request ] Login Failed`)
+                }
+                resolve(data)
+            },
+            error: () => {
+                reject(`[ Request ] Login Failed`)
+            }
+
+        })
+    })
+}
+
+Request.grantUserPlaylistPermission = function({userId, playlistId}) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/playlists/${playlistId}/users`,
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({user: userId}),
+            success: (data, status, xhr) => {
+                if (xhr.status !== 200) {
+                    reject(`[ Request ] Failed to grant permission`)
+                }
+                resolve(data)
+            },
+            error: () => {
+                reject(`[ Request ] Failed to grant permission`)
+            }
+
         })
     })
 }

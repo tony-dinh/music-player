@@ -6,11 +6,11 @@ Storage.sync = function() {
     return models.sequelize.sync();
 };
 
-Storage.get = function(key) {
+Storage.get = function(key, userId) {
     if (key === 'songs') {
         return Storage.getSongs();
     } else if (key === 'playlists') {
-        return Storage.getPlaylists();
+        return Storage.getPlaylistsForUser(userId);
     } else {
         return Promise.reject(new Error(`Invalid request: get(${key})`));
     }
@@ -32,12 +32,16 @@ Storage.getSongs = function() {
         });
 };
 
-Storage.getPlaylists = function() {
-    return models.Playlist.findAll()
-        .then(function(playlists) {
-            // Promise an array of playlist objects
+Storage.getPlaylistsForUser = function(userId) {
+    if (!userId) {
+        return Promise.resolve({playlists:[]})
+    }
+
+    return models.User.findById(userId)
+        .then((userInstance) => userInstance.getPlaylists({ attributes: ['id', 'name'] }))
+        .then((userPlaylists) => {
             return Promise.all(
-                playlists.map(function(playlistInstance) {
+                userPlaylists.map((playlistInstance) => {
                     return Storage.getSongsForPlaylistInstance(playlistInstance)
                         .then(function(songIds) {
                             return {
@@ -47,10 +51,10 @@ Storage.getPlaylists = function() {
                             };
                         });
                 })
-            );
+            )
         })
-        .then(function(playlistArr) {
-            return { playlists: playlistArr };
+        .then((playlistArr) => {
+            return {playlists: playlistArr}
         })
 };
 
@@ -63,21 +67,140 @@ Storage.getSongsForPlaylistInstance = function(playlistInstance) {
         });
 };
 
+Storage.getOtherUsers = function(currentUserId) {
+    return models.User.findAll({
+        where: {
+            id: {
+                ne: currentUserId
+            }
+        }
+    }).then(function(users) {
+        return users.map(function(userInstances) {
+            return {
+                id: userInstances.id,
+                name: userInstances.username
+            }
+        });
+    })
+};
+
 Storage.addSongToPlaylist = function(playlistId, songId) {
     return models.Playlist.findById(playlistId)
         .then(function(playlistInstance) {
-            return playlistInstance.addSong(songId)
+            return playlistInstance.addSong(songId);
         });
 };
 
-Storage.addNewPlaylist = function(playlist) {
-    return models.Playlist.create(playlist, {fields: ['name']})
+Storage.addNewPlaylistForUser = function(playlistName, userId) {
+    return new Promise((resolve, reject) => {
+        models.User.findById(userId).then((userInstance) => {
+            if (!userInstance) {
+                reject()
+            }
+            models.Playlist.create({name:playlistName})
+                .then(function(playlistInstance) {
+                    userInstance.addPlaylist(playlistInstance.id)
+                        .then(function() {
+                            resolve(playlistInstance)
+                        })
+                })
+        })
+    })
 };
 
 Storage.deleteSongFromPlaylist = function(playlistId, songId) {
     return models.Playlist.findById(playlistId)
         .then(function(playlistInstance) {
             return playlistInstance.removeSong(songId);
+        });
+};
+
+Storage.checkValidLogin = function(loginInfo) {
+    return models.User.findOne({
+        where: {
+            "username": loginInfo.username
+        }
+    }).then(function(userInstance) {
+        if (!userInstance || userInstance.password !== loginInfo.password) {
+            return {isValid: false}
+        }
+        return {id: userInstance.id, isValid: true}
+    });
+};
+
+Storage.userHasPlaylistPermission = function(userId, playlistId) {
+    return models.User.findById(userId).then(function(userInstance) {
+        if (!userInstance) {
+            return false
+        }
+
+        return userInstance.hasPlaylist(playlistId)
+    })
+}
+
+Storage.checkActiveSession = function(session) {
+    if (!session.sessionKey) {
+        return Promise.resolve({isActive: false});
+    }
+
+    return new Promise(function(resolve, reject) {
+        models.Session.findOne({
+            where: {
+                "sessionKey": session.sessionKey
+            }
+        }).then(function(sessionInstance) {
+            const session = {isActive: !!sessionInstance};
+            session.sessionUser = sessionInstance
+                ? sessionInstance.sessionUser
+                : null;
+
+            resolve(session);
+        });
+    });
+};
+
+Storage.grantUserPermissionForPlaylist = function({userId, playlistId}) {
+    if (!userId || !playlistId) {
+        return Promise.reject()
+    }
+
+    return new Promise((resolve, reject) => {
+        models.Playlist.findById(playlistId)
+            .then((playlistInstance) => {
+                if (!playlistInstance) {
+                    reject()
+                }
+                resolve(playlistInstance.addUser(userId))
+            })
+    })
+};
+
+Storage.addSession = function(session) {
+    return models.Session.destroy({
+        where: { sessionUser: session.sessionUser }
+    }).then(function() {
+        return models.Session.create(session)
+    })
+};
+
+Storage.getUserForSession = function({sessionKey}) {
+    return models.Session.findOne({
+        where: {
+            sessionKey: sessionKey
+        }
+    }).then((sessionInstance) => {
+        return !!sessionInstance
+            ? sessionInstance.getUser()
+            : Promise.reject()
+    });
+};
+
+Storage.getRoomsForUser = function(userInstance) {
+    return userInstance.getPlaylists()
+        .then((playlistInstances) => {
+            return playlistInstances.map((playlist) => {
+                return `${playlist.id}`
+            })
         });
 };
 
